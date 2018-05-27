@@ -1,0 +1,31 @@
+to series [] {
+    [1 2 3 4]
+}
+
+to double [ n ] {
+    :n + :n
+}
+
+to power [ x y ] {
+    let temp 1
+    repeat :y [
+        let temp ( :temp * :x )
+    ]
+    :temp
+}
+
+to inRange [ a l h ] {
+    when [
+        (:a < :l) 0
+        (:a > :h) 0
+        1
+    ]
+}
+
+[
+    "can call double" ((double 10) == 20)
+    "can call power" ((power 2 2) == 4)
+    "can call inrange" ((inRange 5 1 10) )
+    "can call inrange that fails" ((inRange 5 6 10) == 0)
+    "can call a proc with no args" (series == [1 2 3 4])
+]

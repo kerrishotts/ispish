@@ -1,0 +1,27 @@
+let a [1 2 3 4]
+let b [2 2 4 4]
+
+to double [x] {
+    :x * 2
+}
+
+to series [] {
+    [1 2 3 4]
+}
+
+[
+    ":a can be doubled"
+        ((map :a [x] {:x + :x}) == [2 4 6 8])
+    ":a can be doubled with no list"
+        ((map :a x {:x + :x}) == [2 4 6 8])
+    ":a can be incremented by index"
+        ((map :a [x idx] {:x + :idx}) == [1 3 5 7])
+    ":a can be multiplied by a value in another list"
+        ((map :a [x idx] {:x * :b . :idx}) == [2 4 12 16])
+    ":a can be multiplied by a value in another list, in reverse"
+        ((map :a [x idx] {:x * :b . (-1 - :idx)}) == [4 8 6 8])
+    ":a can be mapped over a function"
+        ((map :a x {double :x}) == [2 4 6 8])
+    "series can be mapped over a function"
+        ((map series x {double :x}) == [2 4 6 8])
+]

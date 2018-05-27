@@ -1,0 +1,11 @@
+to fib [n] {
+    if (:n <= 1) {
+        1
+    } else {
+        (fib :n - 2) + (fib :n - 1)
+    }
+}
+
+[
+    "fib 10 should equal 89" ((fib 10) == 89)
+]
