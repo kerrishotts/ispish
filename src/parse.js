@@ -1,9 +1,8 @@
 const { KINDS, Token } = require('./Token.js');
 const wordRegistry = require('./WordRegistry.js');
 
-const { words: arities } = wordRegistry;
-
 function getArityFor(token) {
+    const { words: arities } = wordRegistry;
     const defaultArity = {
         lhs: 0,
         rhs: 0,

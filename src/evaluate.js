@@ -1,6 +1,5 @@
 const { KINDS, Token } = require('./Token.js');
 const createScope = require('./createScope');
-const { words: arities } = require('./WordRegistry.js');
 
 function lookup(variable, scope) {
     let curScope = scope;
@@ -23,6 +22,7 @@ function lookup(variable, scope) {
  * @returns {*}
  */
 function evaluate(ast, scope = {}) {
+    const { words: arities } = require('./WordRegistry.js');
     if (ast === undefined) {
         return undefined;
     }
@@ -85,12 +85,6 @@ function evaluate(ast, scope = {}) {
         if (!Array.isArray(block)) {
             throw new Error('EVAL: Expected BLOCK to be a list of tokens');
         }
-        /* token.value.forEach((token) => {
-            const result = evaluate(token, newScope);
-            if (result !== undefined) {
-                r = result;
-            }
-        }); */
         for (let idx = 0; idx < block.length; idx += 1) {
             const result = evaluate(block[idx], newScope);
             if (result !== undefined) {
@@ -106,8 +100,8 @@ function evaluate(ast, scope = {}) {
         return r;
     }
     if (token.isOp) {
-        const lhs = evaluate(token.tokens[0], scope);
-        const rhs = evaluate(token.tokens[1], scope);
+        const lhs = Token.guard(evaluate(Token.guard(token.leftChild), scope));
+        const rhs = Token.guard(evaluate(Token.guard(token.rightChild), scope));
         return new Token({
             kind: KINDS.NUMBER,
             value: arities[token.value].impl(lhs.value, rhs.value),

@@ -1,40 +1,23 @@
 # ispish
 A simple lisp/logo-like language
 
-- [ispish](#ispish)
-    - [Hello, World!](#hello--world)
-    - [Words](#words)
-    - [Variables](#variables)
-    - [Expressions](#expressions)
-    - [Language Definition](#language-definition)
-        - [Types](#types)
-            - [Number](#number)
-            - [String](#string)
-            - [Variable Reference](#variable-reference)
-            - [Word](#word)
-            - [List](#list)
-            - [Tuple](#tuple)
-            - [Block](#block)
-            - [Expression](#expression)
-        - [Standard Wordset](#standard-wordset)
-            - [LIST `.` N](#list-n)
-            - [`EXIT`](#exit)
-            - [`EXITWITH` VALUE](#exitwith-value)
-            - [`IF` `(` EXPR `)` `{` IF-BLOCK `}` [ `ELSE` `{` ELSE-BLOCK `}`]](#if-expr-if-block-else-else-block)
-            - [`LET` WORD EXPR](#let-word-expr)
-            - [`MAP` LIST `[` ITEM-VAR [INDEX-VAR] `]` `{` MAP-BLOCK `}`](#map-list-item-var-index-var-map-block)
-            - [`PRINT` EXPR](#print-expr)
-            - [`REM` EXPR](#rem-expr)
-            - [`REPEAT` TIMES `[` REPEAT-LIST `]`](#repeat-times-repeat-list)
-            - [`SIZE` LIST](#size-list)
-            - [`SUM` LIST](#sum-list)
-            - [`TO` WORD-NAME `[` ARG-LIST `]` `{` WORD-DEFINITION `}`](#to-word-name-arg-list-word-definition)
-            - [`WHEN` `[` CONDITION EXPR ... DEFAULT-EXPR `]`](#when-condition-expr-default-expr)
-    - [Examples](#examples)
-        - [Fibonacci Sequence (using `IF`)](#fibonacci-sequence-using-if)
-        - [Fibonacci Sequence (using `WHEN`)](#fibonacci-sequence-using-when)
-        - [Reduce over a list](#reduce-over-a-list)
-        - [Exponent](#exponent)
+- [Hello, World!](#hello-world)
+- [Words](#words)
+- [Variables](#variables)
+- [Expressions](#expressions)
+- [Language Definition](#language-definition)
+    - [Types](#types)
+        - [Number](#number)
+        - [String](#string)
+        - [Variable Reference](#variable-reference)
+        - [Word](#word)
+        - [List](#list)
+        - [Tuple](#tuple)
+        - [Block](#block)
+        - [Expression](#expression)
+    - [Standard Dictionary](#standard-dictionary)
+- [Examples](#examples)
+- [License](#license)
 
 ## Hello, World!
 
@@ -311,199 +294,14 @@ LET A 9
 
 An expression is typically a mathematical expression. For example "2 + 2" is an expression represented by the `+` word and two numbers. Expressions occur naturally in the course of writing a program, and the return result is the result of evaluating the expression.
 
-### Standard Wordset
+### Standard Dictionary
 
-#### LIST `.` N
-
-Returns the `N`th item in `LIST` (zero based). If `N` is negative, the `N`th item from the end of the list is returned.
-
-```text
-[1 2 3] . 0
-> 1
-
-[1 2 3] . 2
-> 3
-
-[1 2 3] . -1
-> 3
-
-[1 2 3] . -3
-> 1
-```
-
-#### `EXIT`
-
-Exits the block immediately. Useful in `REPEAT` and word definitions.
-
-#### `EXITWITH` VALUE
-
-Exits the block immediately, returning `VALUE`. Used to exit word definitions early.
-
-#### `IF` `(` EXPR `)` `{` IF-BLOCK `}` [ `ELSE` `{` ELSE-BLOCK `}`]
-
-If `EXPR` evaluates to `1`, the `IF-BLOCK` is executed and returned. If `ELSE` is present and `EXPR` evaluted to `0`, the `ELSE-BLOCK` is executed and returned instead.
-
-```text
-IF (1 < 2) {
-    "true"
-}
-> "true
-
-IF (1 > 2) {
-    "true!"
-} ELSE {
-    "false"
-}
-> "false"
-```
-
-#### `LET` WORD EXPR
-
-Assigns the result of `EXPR` to a new variable in the current scope named `WORD`. Variables are dereferenced using the `:` form.
-
-```text
-LET A 5
-LET B :A + 5
-PRINT :B
-> 10
-```
-
-#### `MAP` LIST `[` ITEM-VAR [INDEX-VAR] `]` `{` MAP-BLOCK `}`
-
-Iterates over each item in `LIST`, executing `MAP-BLOCK` for each item. `ITEM-VAR` and `INDEX-VAR` can be used to indicate the variable names for the list item and the list index respectively.
-
-```text
-MAP [1 2 3 4] [ X IDX ] { :X + :IDX }
-> [1 3 5 7]
-
-MAP [1 2 3 4] [ X ] { :X * 2 }
-> [2 4 6 8]
-
-MAP [1 2 3 4] X { :X * 2 }
-> [2 4 6 8]
-```
-
-#### `PRINT` EXPR
-
-Prints the value of `EXPR` to the console. If `EXPR` is a list, the list is printed with no spaces in between.
-
-#### `REM` EXPR
-
-Consumes `EXPR` and ignores it. Useful for remarks (comments).
-
-```text
-REM "This will be ignored completely"
-```
-
-#### `REPEAT` TIMES `[` REPEAT-LIST `]`
-
-Repeats the items in `REPEAT-LIST` the number of times specified by `TIMES`. If `EXIT` or `EXITWITH` is used, the loop can be exited early.
-
-Because `REPEAT-LIST` is not in `{...}`, no new scope is created and changes to variables can be persisted. This is useful for keeping track of how many times through the loop one has been.
-
-```text
-LET IDX 0
-REPEAT 4 [
-    LET IDX :IDX + 1
-    PRINT :IDX
-]
-PRINT :IDX
-> 1
-> 2
-> 3
-> 4
-> 4
-```
-
-#### `SIZE` LIST
-
-Returns the number of items contained with `LIST`.
-
-```text
-SIZE [1 2 3]
-> 3
-```
-
-#### `SUM` LIST
-
-Returns the sum of all the numbers within `LIST`.
-
-```text
-SUM [10 20 30 40]
-> 100
-```
-
-#### `TO` WORD-NAME `[` ARG-LIST `]` `{` WORD-DEFINITION `}`
-
-Creates a new word definition.
-
-#### `WHEN` `[` CONDITION EXPR ... DEFAULT-EXPR `]`
-
-`WHEN` is useful when you need to test for multiple conditional expressions. The conditions don't have to be mutually exclusive, however execution _is_ stopped upon the first successfully matched condition.
-
-```
-LET A 10
-LET B 20
-WHEN [
-    (:A < :B) "less"
-    (:A > :B) "greater"
-    "equal"
-]
-> "less"
-```
+See [the standard dictionary reference](./docs/standard-dictionary/index.md).
 
 ## Examples
 
-### Fibonacci Sequence (using `IF`)
+See [index of examples](./docs/examples/index.md).
 
-```text
-TO FIB [N] {
-    IF (:N <= 1) {
-        1
-    } ELSE {
-        (FIB :N - 2) + (FIB :N - 1)
-    }
-}
-```
+## License
 
-### Fibonacci Sequence (using `WHEN`)
-
-```text
-TO FIB [n] {
-    WHEN [
-        (:N <= 1) 1
-        (FIB :N - 2) + (FIB :N - 1)
-    ]
-}
-```
-
-### Reduce over a list
-
-```text
-TO REDUCE [ LIST FN ACC ] {
-    LET ACC :ACC
-    LET IDX 0
-    LET LEN (SIZE :LIST)
-    REPEAT :LEN [
-        LET ITEM :LIST . :IDX
-        LET ACC :FN
-        LET IDX :IDX + 1
-    ]
-    :ACC
-}
-
-PRINT (REDUCE [10 20 30 40] {:ACC + :ITEM} 0)
-> 100
-```
-
-### Exponent
-
-```text
-TO POWER [ X Y ] {
-    LET TEMP 1
-    REPEAT :Y [
-        LET TEMP ( :TEMP * :X )
-    ]
-    :TEMP
-}
-```
+Apache 2.0

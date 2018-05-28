@@ -7,7 +7,7 @@ const standardWords = require('./src/standardWords.js');
 
 standardWords(wordRegistry);
 
-function run(code) {
+function run(code, scope = {}) {
     let tokens;
     let ast;
 
@@ -26,10 +26,15 @@ ${err.stack}`);
     }
 
     try {
-        const r = evaluate(new Token({
-            kind: KINDS.BLOCK,
-            value: ast,
-        }));
+        const r = evaluate(
+            new Token({
+                kind: KINDS.BLOCK,
+                value: ast,
+                line: 1,
+                pos: 1,
+            }),
+            scope,
+        );
         return r;
     } catch (err) {
         throw err;
@@ -44,4 +49,8 @@ module.exports = {
     parse,
     evaluate,
     run,
+    reset: () => {
+        wordRegistry.reset();
+        standardWords(wordRegistry);
+    },
 };

@@ -18,7 +18,7 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
         startPos: pos,
     };
     const wrappedCode = `${code} `;
-    const { tokens } = Array.from(wrappedCode).reduce((state, ch) => {
+    const { tokens, str } = Array.from(wrappedCode).reduce((state, ch) => {
         const { tokens } = state;
         let { str, line, pos, startLine, startPos } = state;
         let skipCh = false;
@@ -166,7 +166,9 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
             startPos,
         };
     }, initialState);
-
+    if (str !== '') {
+        throw new Error('Unexpected end of input');
+    }
     return tokens;
 }
 
