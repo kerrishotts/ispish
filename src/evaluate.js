@@ -64,9 +64,8 @@ function evaluate(ast, scope = {}) {
     }
     if (token.isTuple) {
         let r;
-        const newScope = createScope(scope, globalScope);
         token.value.forEach((token) => {
-            const result = evaluate(token, newScope);
+            const result = evaluate(token, scope);
             if (result !== undefined) {
                 r = result;
             }

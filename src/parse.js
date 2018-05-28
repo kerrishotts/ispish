@@ -49,7 +49,18 @@ function parse(tokens) {
         const token = parseTokens[posOfHighestToken];
         if (token.isTuple) {
             const parsedTokens = parse(token.value);
-            parseTokens[posOfHighestToken] = parsedTokens[parsedTokens.length - 1];
+            // parseTokens[posOfHighestToken] = parsedTokens[parsedTokens.length - 1];
+            parseTokens[posOfHighestToken] = new Token({
+                kind: KINDS.EXPR,
+                value: new Token({
+                    kind: KINDS.TUPLE,
+                    value: parsedTokens,
+                    line: token.line,
+                    pos: token.pos,
+                }),
+                line: token.line,
+                pos: token.pos,
+            });
         } else if (token.isBlock) {
             const parsedTokens = parse(token.value);
             parseTokens[posOfHighestToken] = new Token({
@@ -73,8 +84,8 @@ function parse(tokens) {
                     line: token.line,
                     pos: token.pos,
                 }),
-                    line: token.line,
-                    pos: token.pos,
+                line: token.line,
+                pos: token.pos,
             });
         } else {
             const arity = getArityFor(token);

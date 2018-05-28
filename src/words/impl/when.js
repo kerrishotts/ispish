@@ -18,11 +18,11 @@ module.exports = ({
                 Token.guard(evaluate(Token.guard(cExpr), scope), { expected: KINDS.NUMBER })
                     .unboxed === 1
             ) {
-                r = evaluate(Token.guard(doExpr), createScope(scope));
+                r = evaluate(Token.guard(doExpr), createScope(scope, globalScope));
                 break;
             }
         } else if (r === undefined) {
-            r = evaluate(Token.guard(cExpr), createScope(scope));
+            r = evaluate(Token.guard(cExpr), createScope(scope, globalScope));
         }
     }
 
