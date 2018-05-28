@@ -12,7 +12,7 @@
 * [`REPEAT`](./repeat.md): repeat a given number of times
 * [`WHEN`](./when.md): conditionally execute code when a condition is matched
 * [`EXIT`](./exit.md): Exit a block prematurely
-* [`EXITWHEN`](./exitwhen.md): Exit a block prematurely with a value
+* [`EXITWITH`](./exitwith.md): Exit a block prematurely with a value
 
 ## Lists
 
