@@ -3,23 +3,15 @@ const { KINDS, Token } = require('../../Token');
 module.exports = ({
     evaluate, token, scope, globalScope,
 } = {}) => {
-    /*
-     * we expect the following token structure
-     *
-     * WORD:TO (<-- token)
-     *   leftChild: EXPR
-     *     value: WORD (proc name)
-     *     leftChild: LIST of WORDS (arguments)
-     *   rightChild: BLOCK (body)
-     */
-    //console.log(token.leftChild);
     const meta = Token.guard(token.leftChild, { expected: [KINDS.EXPR, KINDS.WORD] });
 
     if (!meta.isWord && !(meta.value instanceof Token)) {
         throw new Error('TO: Expected a single WORD for proc definition');
     }
     const varName = Token.guard(meta.isWord ? meta : meta.value, { expected: KINDS.WORD }).word;
-    const argTokens = meta.isWord ? {value: []} : Token.guard(meta.leftChild, { expected: KINDS.LIST });
+    const argTokens = meta.isWord
+        ? { value: [] }
+        : Token.guard(meta.leftChild, { expected: KINDS.LIST });
 
     // check each argToken to ensure that it's just a basic word
     if (!Array.isArray(argTokens.value)) {
@@ -30,16 +22,23 @@ module.exports = ({
     }
 
     const args = meta.isWord ? [] : argTokens.unboxed;
-    // const args = token.tokens[0].tokens[0].value.map(arg => arg.value);
+
     let body;
-    if (args.length < 2) {
-        body = token.tokens[1];
-    } else {
-        body = token.tokens[0].tokens[1];
+    switch (args.length) {
+    case 0:
+        [, , body] = token.tokens;
+        break;
+    case 1:
+        body = token.rightChild;
+        break;
+    default:
+        [, body] = token.leftChild.tokens;
     }
+
     if (globalScope[varName]) {
-        throw new Error("Can't redefine an existing funciton");
+        throw new Error(`Can't redefine word ${varName}. ${token.where}`);
     }
+
     globalScope[varName] = body;
     globalScope[varName].args = args;
 };

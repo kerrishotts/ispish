@@ -14,11 +14,13 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
         tokens: [],
         line,
         pos,
+        startLine: line,
+        startPos: pos,
     };
     const wrappedCode = `${code} `;
     const { tokens } = Array.from(wrappedCode).reduce((state, ch) => {
         const { tokens } = state;
-        let { str, line, pos } = state;
+        let { str, line, pos, startLine, startPos } = state;
         let skipCh = false;
         let newToken = false;
 
@@ -99,11 +101,13 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
                     tokens,
                     line,
                     pos,
+                    startLine,
+                    startPos,
                 };
             }
 
             // decide what to do with this token
-            const curToken = new Token({ line, pos });
+            const curToken = new Token({ line: startLine, pos: startPos });
             if (str[0] === ':') {
                 curToken.value = str.substr(1);
                 curToken.kind = KINDS.VARIABLE;
@@ -114,13 +118,13 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
                 curToken.value = Number(str);
                 curToken.kind = KINDS.NUMBER;
             } else if (str[0] === '[') {
-                curToken.value = tokenize(str.substr(1), { line, pos });
+                curToken.value = tokenize(str.substr(1), { line: startLine, pos: startPos });
                 curToken.kind = KINDS.LIST;
             } else if (str[0] === '{') {
-                curToken.value = tokenize(str.substr(1), { line, pos });
+                curToken.value = tokenize(str.substr(1), { line: startLine, pos: startPos });
                 curToken.kind = KINDS.BLOCK;
             } else if (str[0] === '(') {
-                curToken.value = tokenize(str.substr(1), { line, pos });
+                curToken.value = tokenize(str.substr(1), { line: startLine, pos: startPos });
                 curToken.kind = KINDS.TUPLE;
             } else if (operator.test(str[0])) {
                 curToken.value = str;
@@ -131,6 +135,9 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
             }
 
             tokens.push(curToken);
+
+            startLine = line;
+            startPos = pos;
 
             // get ready for next token
             if (skipCh) {
@@ -144,6 +151,8 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
                 tokens,
                 line,
                 pos,
+                startLine,
+                startPos,
             };
         }
         str = !whitespace.test(ch) ? ch : '';
@@ -153,6 +162,8 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
             tokens,
             line,
             pos,
+            startLine,
+            startPos,
         };
     }, initialState);
 

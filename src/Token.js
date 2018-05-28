@@ -54,7 +54,7 @@ class Token {
         if (this[_line] === undefined || this[_pos] === undefined) {
             return '';
         }
-        return `${this[_line]}:${this[_pos]}`;
+        return `(at ${this[_line]}:${this[_pos]})`;
     }
 
     get line() {
@@ -184,12 +184,12 @@ class Token {
      * @readonly
      */
     get unboxed() {
-        if (this.isNumber || this.isString) {
+        if (this.isNumber || this.isString || this.isWord) {
             return this.value;
         }
         if (this.isList) {
             return this.value /* :Token[] */
-                .map(v => v.value);
+                .map(v => v.unboxed);
         }
         return undefined;
     }
@@ -329,7 +329,7 @@ class Token {
      * @readonly
      */
     get [Symbol.toStringTag]() {
-        return `TOKEN:${KINDS[this.kind]}(${this.where}) ${this.value} ${this.tokens}`;
+        return `TOKEN:${KINDS[this.kind]}<${this.where}> ${this.value} ${this.tokens}`;
     }
 
     /**
@@ -361,7 +361,7 @@ class Token {
         if (value instanceof Token) {
             value = value.description;
         }
-        return `${KINDS[this.kind]}(${this.where}):${value}:${tokens}`;
+        return `${KINDS[this.kind]}<${this.where}>:${value}:${tokens}`;
     }
 
     /**
@@ -378,22 +378,22 @@ class Token {
      */
     static guard(token, { expected = undefined, exists = true, msg = undefined } = {}) {
         if (!token && exists) {
-            throw new Error(`Expected a token of type ${expected || 'any'}; didn't receive one.`);
+            throw new Error(`Expected a ${expected || 'token'}; didn't receive one.`);
         }
         if (token.value === undefined && exists) {
-            throw new Error(`Expected a token of type ${expected || 'any'}; didn't receive one.`);
+            throw new Error(`Expected a ${expected || 'token'}; didn't receive one. ${token.where}`);
         }
         if (typeof expected === 'string') {
             if (!(token.kind === expected)) {
-                throw new Error(msg || `Expected token of kind ${expected}; got ${token.kind}. Token: ${token}`);
+                throw new Error(msg || `Expected a ${expected}; got ${token.kind}. ${token.where}`);
             }
         }
         if (Array.isArray(expected)) {
             if (!expected.some(kind => kind === token.kind)) {
                 throw new Error(msg ||
-                        `Expected token of kind ${expected.join(', ')}; got ${
+                        `Expected ${expected.join(', ')}; got ${
                             token.kind
-                        }. Token: ${token}`);
+                        }. ${token.where}`);
             }
         }
         return token;

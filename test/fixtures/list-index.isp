@@ -6,4 +6,5 @@ let b [ 10 20 30 ]
     ":b . :a should also be 30"    ((:b . :a) == 30)
     ":b . -1 should also be 30"    ((:b . -1) == 30)
     ":b . -2 should be 20"         ((:b . -2) == 20)
+    "size of b is 3"               ((size :b) == 3)
 ]

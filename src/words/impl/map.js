@@ -38,7 +38,6 @@ module.exports = ({
                 }),
             ];
             args.forEach((arg, idx) => {
-                // console.log(arg, toPass[idx]);
                 newScope[arg] = toPass[idx];
             });
             return evaluate(fn, newScope); // [0];

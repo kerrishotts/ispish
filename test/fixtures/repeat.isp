@@ -1,0 +1,63 @@
+rem "
+/**
+ * Return a value raised to its exponent
+ *
+ * @param {number} x
+ * @param {number} y
+ * @return {number} x ^ y
+ */
+"
+to power [ x y ] {
+    let temp 1
+    repeat :y [
+        let temp ( :temp * :x )
+    ]
+    :temp
+}
+
+to count [ n ] {
+    let temp 0
+    repeat :n [
+        let temp ( :temp + 1 )
+    ]
+    :temp
+}
+
+to find [ list fn ] {
+    let idx 0
+    repeat (size :list) [
+        let item :list . :idx
+        if (:fn == 1) {
+            exit
+        }
+        let idx :idx + 1
+    ]
+    when [
+        (:idx == (size :list)) -1
+        :idx
+    ]
+}
+
+to reduce [ list fn acc ] {
+    let acc :acc
+    let idx 0
+    let len (size :list)
+    repeat :len [
+        let item :list . :idx
+        let acc :fn
+        let idx :idx + 1
+    ]
+    :acc
+}
+
+to addAll [ list ] {
+    reduce :list {:acc + :item} 0
+}
+
+[
+    "2 ^ 2 == 4" ((power 2 2) == 4)
+    "count 10 == 10" ((count 10) == 10)
+    "can find in a list" ((find [10 20 30 40] {:item == 30}) == 3)
+    "can reduce a list" ((reduce [10 20 30 40] {:acc + :item} 0) == 100)
+    "can sum a list" ((addAll [10 20 30 50]) == 110)
+]

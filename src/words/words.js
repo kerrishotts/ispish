@@ -77,4 +77,25 @@ module.exports = {
         precedence: 20,
         impl: require('./impl/dot.js'),
     },
+    SIZE: {
+        native: true,
+        lhs: 0,
+        rhs: 1,
+        precedence: 0,
+        impl: require('./impl/size.js'),
+    },
+    PRINT: {
+        native: true,
+        lhs: 0,
+        rhs: 1,
+        precedence: 0,
+        impl: require('./impl/print.js'),
+    },
+    REM: {
+        native: true,
+        lhs: 0,
+        rhs: 1,
+        precedence: 0,
+        impl: require('./impl/rem.js'),
+    },
 };

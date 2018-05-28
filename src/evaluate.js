@@ -13,7 +13,7 @@ function lookup(variable, scope) {
     if (scope.__global__ && scope.__global__.hasOwnProperty(variable)) {
         return scope.__global__[variable];
     }
-    throw new Error(`Can't locate a variable named ${variable}`);
+    throw new Error(`Can't find ${variable}`);
 }
 
 /**
@@ -60,7 +60,7 @@ function evaluate(ast, scope = {}) {
         return token;
     }
     if (token.isVariable) {
-        return lookup(token.value, scope);
+        return evaluate(lookup(token.value, scope), scope);
     }
     if (token.isTuple) {
         let r;
@@ -125,15 +125,20 @@ function evaluate(ast, scope = {}) {
             });
         }
         // call
-        const func = lookup(token.value, scope);
-        const newScope = createScope(scope, globalScope);
-        if (func.args) {
-            func.args.forEach((varName, idx) => {
-                const arg = evaluate(Token.guard(token.tokens[idx]), scope);
-                newScope[varName] = arg;
-            });
+        try {
+            const func = lookup(token.value, scope);
+            const newScope = createScope(scope, globalScope);
+            if (func.args) {
+                func.args.forEach((varName, idx) => {
+                    const argToken = Token.guard(token.tokens[idx]);
+                    const arg = argToken.isBlock ? argToken : evaluate(argToken, scope);
+                    newScope[varName] = arg;
+                });
+            }
+            return evaluate(func, newScope);
+        } catch (err) {
+            throw new Error(`${err.message} ${token.where}`);
         }
-        return evaluate(func, newScope);
     }
     return undefined;
 }

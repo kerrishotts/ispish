@@ -30,7 +30,7 @@ describe('Tokenize', () => {
                     kind: KINDS.NUMBER,
                     value: 25,
                     line: 1,
-                    pos: 4,
+                    pos: 1,
                 }),
             ]);
         });
@@ -41,7 +41,7 @@ describe('Tokenize', () => {
                     kind: KINDS.STRING,
                     value: 'Hello, world',
                     line: 1,
-                    pos: 15,
+                    pos: 1,
                 }),
             ]);
         });

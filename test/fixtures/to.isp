@@ -2,6 +2,10 @@ to series [] {
     [1 2 3 4]
 }
 
+to PI [] {
+    3.1415
+}
+
 to double [ n ] {
     :n + :n
 }
@@ -22,10 +26,16 @@ to inRange [ a l h ] {
     ]
 }
 
+to alist [ a b c d ] {
+    [:a :b :c :d]
+}
+
 [
     "can call double" ((double 10) == 20)
     "can call power" ((power 2 2) == 4)
     "can call inrange" ((inRange 5 1 10) )
     "can call inrange that fails" ((inRange 5 6 10) == 0)
-    "can call a proc with no args" (series == [1 2 3 4])
+    "can call a proc with no args returning list" (series == [1 2 3 4])
+    "can call a proc with no args" (PI == 3.1415)
+    "can call a proc with four args" ((alist 10 20 30 40) == [10 20 30 40])
 ]
