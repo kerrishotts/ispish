@@ -8,4 +8,4 @@
 
 ## List Manipulation
 
-* [Reduce over a list](./reduce.md)
+* [Reduce over a list](./list-reduce.md)
