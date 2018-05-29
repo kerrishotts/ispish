@@ -1,6 +1,6 @@
 # ispish reference
 
-* [Getting Started]()
+* [Getting Started](./guides/getting-started.md)
 * Reference
     * [Types](./types/index.md)
     * [Standard Dictionary](./standard-dictionary/index.md)

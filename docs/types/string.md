@@ -1,6 +1,6 @@
 # String
 
-![String](../assets/string.md)
+![String](../assets/string.png)
 
 A string is a collection of characters.
 
