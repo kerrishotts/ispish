@@ -7,7 +7,8 @@
     "ispish": "./cli.js"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "cover": "nyc mocha"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,25 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.12.0",
     "get-stdin": "^6.0.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nyc": "^11.8.0"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 75,
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "test/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "html",
+      "text"
+    ],
+    "all": true,
+    "report-dir": "./.coverage"
   }
 }
