@@ -1,6 +1,6 @@
 # Operator
 
-![Operator](../assets/operator.png)
+![Operator](../assets/op.png)
 
 Operator | Precedence | Meaning
 :-------:|:----------:|:---------
