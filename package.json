@@ -15,7 +15,13 @@
         "type": "git",
         "url": "git+https://github.com/kerrishotts/ispish.git"
     },
-    "keywords": ["lisp", "logo", "parser", "javascript", "example"],
+    "keywords": [
+        "lisp",
+        "logo",
+        "parser",
+        "javascript",
+        "example"
+    ],
     "author": "Kerri Shotts",
     "license": "Apache-2.0",
     "bugs": {
@@ -30,6 +36,11 @@
         "@types/mocha": "^5.2.0",
         "@types/node": "^10.1.2",
         "chai": "^4.1.2",
+        "esdoc": "^1.1.0",
+        "esdoc-ecmascript-proposal-plugin": "^1.0.0",
+        "esdoc-external-ecmascript-plugin": "^1.0.0",
+        "esdoc-node": "^1.0.3",
+        "esdoc-standard-plugin": "^1.0.0",
         "eslint": "^4.19.1",
         "eslint-config-airbnb-base": "^12.1.0",
         "eslint-plugin-import": "^2.12.0",
@@ -40,10 +51,37 @@
         "check-coverage": true,
         "per-file": true,
         "lines": 75,
-        "include": ["src/**/*.js"],
-        "exclude": ["test/**/*.js"],
-        "reporter": ["lcov", "html", "text"],
+        "include": [
+            "src/**/*.js"
+        ],
+        "exclude": [
+            "test/**/*.js"
+        ],
+        "reporter": [
+            "lcov",
+            "html",
+            "text"
+        ],
         "all": true,
         "report-dir": "./.coverage"
+    },
+    "esdoc": {
+        "source": "./src",
+        "destination": "./esdocs",
+        "exclude": ".external-ecmascript.js",
+        "plugins": [
+            {
+                "name": "esdoc-standard-plugin"
+            },
+            {
+                "name": "esdoc-external-ecmascript-plugin", "option": {"enable": false}
+            },
+            {
+                "name": "esdoc-ecmascript-proposal-plugin", "option": {"enable": false}
+            },
+            {
+                "name": "esdoc-node"
+            }
+        ]
     }
 }
