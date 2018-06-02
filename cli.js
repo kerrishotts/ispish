@@ -45,7 +45,7 @@ if (options.interactive) {
         try {
             const r = run(cmd, scope);
             let ret;
-            if (r && r.unboxed) {
+            if (r && r.unboxed !== undefined) {
                 ret = r.unboxed;
             }
             callback(null, ret);

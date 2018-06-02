@@ -180,7 +180,7 @@ class Token {
      * Return this token's value as an unboxed primitive, if
      * possible
      *
-     * @type { Number | String }
+     * @type { Number | String | Array}
      * @readonly
      */
     get unboxed() {

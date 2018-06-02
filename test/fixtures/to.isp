@@ -1,33 +1,62 @@
+REM "ensure functions with no parameters can return a list"
 to series [] {
     [1 2 3 4]
 }
 
+REM "ensure can return a constant with no parameters"
 to PI [] {
     3.1415
 }
 
+REM "
+@param n the number to doubple
+@return twice n
+"
 to double [ n ] {
-    :n + :n
+    n + n
 }
 
+REM "
+@param x number to raise
+@param y exponent to apply to x
+@return x raised to y
+"
 to power [ x y ] {
     let temp 1
-    repeat :y [
-        let temp ( :temp * :x )
+    repeat y [
+        let temp ( temp * x )
     ]
-    :temp
+    temp
 }
 
+REM "
+@param a number to check
+@param l low limit
+@param h high limit
+@return 1 if in range; 0 if not
+"
 to inRange [ a l h ] {
     when [
-        (:a < :l) 0
-        (:a > :h) 0
+        (a < l) 0
+        (a > h) 0
         1
     ]
 }
 
+REM "can take four parameters"
 to alist [ a b c d ] {
-    [:a :b :c :d]
+    [a b c d]
+}
+
+REM "can use rest to be variadic"
+to apply [ fn ] {
+    print _rest
+    map _rest [item idx] { print item fn }
+}
+
+REM "can use args to be variadic"
+to triple [ ] {
+    map _args x { x * 3 }
 }
 
 [
@@ -38,4 +67,6 @@ to alist [ a b c d ] {
     "can call a proc with no args returning list" (series == [1 2 3 4])
     "can call a proc with no args" (PI == 3.1415)
     "can call a proc with four args" ((alist 10 20 30 40) == [10 20 30 40])
+    "can use rest to be variadic" ((apply {item * 3} 1 2 3) == [3 6 9])
+    "can use args to be variadic" ((triple 1 2 3) == [3 6 9])
 ]

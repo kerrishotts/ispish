@@ -121,13 +121,32 @@ function evaluate(ast, scope = {}) {
         try {
             const func = lookup(token.value, scope);
             const newScope = createScope(scope, globalScope);
+            const args = new Token({
+                kind: KINDS.LIST,
+                value: [],
+            });
+            const rest = new Token({
+                kind: KINDS.LIST,
+                value: [],
+            });
             if (func.args) {
                 func.args.forEach((varName, idx) => {
                     const argToken = Token.guard(token.tokens[idx]);
                     const arg = argToken.isBlock ? argToken : evaluate(argToken, scope);
                     newScope[varName] = arg;
+                    args.value.push(arg);
                 });
             }
+            if (token.tokens.length > args.value.length) {
+                for (let idx = args.value.length; idx < token.tokens.length; idx += 1) {
+                    const argToken = Token.guard(token.tokens[idx]);
+                    const arg = argToken.isBlock ? argToken : evaluate(argToken, scope);
+                    args.value.push(arg);
+                    rest.value.push(arg);
+                }
+            }
+            newScope._ARGS = args;
+            newScope._REST = rest;
             return evaluate(func, newScope);
         } catch (err) {
             throw new Error(`${err.message} ${token.where}`);

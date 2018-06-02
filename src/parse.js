@@ -49,17 +49,15 @@ function parse(tokens) {
         if (token.isTuple) {
             const parsedTokens = parse(token.value);
             // parseTokens[posOfHighestToken] = parsedTokens[parsedTokens.length - 1];
-            parseTokens[posOfHighestToken] = new Token({
+            const newToken = new Token({
                 kind: KINDS.EXPR,
-                value: new Token({
-                    kind: KINDS.TUPLE,
-                    value: parsedTokens,
-                    line: token.line,
-                    pos: token.pos,
-                }),
+                value: parsedTokens[0],
+                //tokens: parsedTokens.slice(1),
                 line: token.line,
                 pos: token.pos,
             });
+            newToken.value.tokens.push(...parsedTokens.slice(1));
+            parseTokens[posOfHighestToken] = newToken;
         } else if (token.isBlock) {
             const parsedTokens = parse(token.value);
             parseTokens[posOfHighestToken] = new Token({

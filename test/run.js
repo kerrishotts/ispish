@@ -17,7 +17,7 @@ describe('run', () => {
             {
                 name: 'error-1',
                 code: 'LET :NAME "John"',
-                error: 'Expected a WORD; got VARIABLE. (at 1:5)',
+                error: 'Expected WORD, LIST; got VARIABLE. (at 1:5)',
             },
             {
                 name: 'print-1',
@@ -40,9 +40,9 @@ describe('run', () => {
 let name "John"
 {
     let name "Martha"
-    print :name
+    print name
 }
-print :name
+print name
                 `,
                 result: 'John',
             },
@@ -103,13 +103,28 @@ print :name
             },
             {
                 name: 'dot-2',
-                code: 'let a [10 20 30] :a . 1',
+                code: 'let a [10 20 30] a . 1',
                 result: 20,
             },
             {
                 name: 'sum-1',
                 code: 'sum [ 10 20 30 40 ]',
                 result: 100,
+            },
+            {
+                name: 'let-1',
+                code: 'let a 5',
+                result: 5,
+            },
+            {
+                name: 'let-2',
+                code: 'let a 5 let b a a + b',
+                result: 10,
+            },
+            {
+                name: 'let-3',
+                code: 'let [a b c] [1 2 3] a + b + c',
+                result: 6,
             },
         ];
         tests.forEach(({
