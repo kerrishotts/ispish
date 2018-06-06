@@ -9,10 +9,10 @@ Because `REPEAT-LIST` is not in `{...}`, no new scope is created and changes to 
 ```text
 LET IDX 0
 REPEAT 4 [
-    LET IDX :IDX + 1
-    PRINT :IDX
+    LET IDX IDX + 1
+    PRINT IDX
 ]
-PRINT :IDX
+PRINT IDX
 > 1
 > 2
 > 3

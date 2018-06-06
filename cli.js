@@ -38,17 +38,35 @@ getStdin().then((str) => {
 });
 
 if (options.interactive) {
-    const { reset, run } = require('./index.js');
+    const {
+        reset, run, evaluate, Token, KINDS,
+    } = require('./index.js');
     let scope = {};
     const isRecoverableError = e => /(Unexpected end of input|didn't receive one)/.test(e.message);
     const exec = (cmd, context, filename, callback) => {
         try {
-            const r = run(cmd, scope);
+            let r = run(cmd, scope);
+
+            if (r !== undefined) {
+                const printExpr = new Token({
+                    kind: KINDS.EXPR,
+                    value: new Token({
+                        kind: KINDS.WORD,
+                        value: 'PRINTCODE',
+                    }),
+                    tokens: [r],
+                });
+
+                r = evaluate(printExpr);
+            } else {
+                r = '(no return)';
+            }
+
             let ret;
             if (r && r.unboxed !== undefined) {
                 ret = r.unboxed;
             }
-            callback(null, ret);
+            callback(null);
         } catch (err) {
             if (isRecoverableError(err)) {
                 return callback(new repl.Recoverable(err));
@@ -58,7 +76,7 @@ if (options.interactive) {
         }
     };
     const r = repl.start({
-        prompt: '> ',
+        prompt: '\nReady.\n',
         eval: exec,
     });
     r.on('reset', () => {

@@ -344,7 +344,7 @@ class Token {
             if (value.length > 0) {
                 value = `[ ${value
                     .map(v => (v instanceof Token ? v.description : v))
-                    .join(', ')} ]`;
+                    .join(' ')} ]`;
             } else {
                 value = '[]';
             }
@@ -353,7 +353,7 @@ class Token {
             if (tokens.length > 0) {
                 tokens = `[ ${tokens
                     .map(v => (v instanceof Token ? v.description : v))
-                    .join(', ')} ]`;
+                    .join(' ')} ]`;
             } else {
                 tokens = '[]';
             }

@@ -8,8 +8,8 @@
 LET A 10
 LET B 20
 WHEN [
-    (:A < :B) "less"
-    (:A > :B) "greater"
+    (A < B) "less"
+    (A > B) "greater"
     "equal"
 ]
 > "less"

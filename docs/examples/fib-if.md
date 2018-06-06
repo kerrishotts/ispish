@@ -2,10 +2,10 @@
 
 ```text
 TO FIB [N] {
-    IF (:N <= 1) {
+    IF (N <= 1) {
         1
     } ELSE {
-        (FIB :N - 2) + (FIB :N - 1)
+        (FIB N - 2) + (FIB N - 1)
     }
 }
 ```

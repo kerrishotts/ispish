@@ -66,21 +66,21 @@ Words can take arguments too:
 
 ```text
 TO SAYHELLO [ NAME ] {
-    PRINT [ "Hello, " :NAME ]
+    PRINT [ "Hello, " NAME ]
 }
 SAYHELLO "John"
 > Hello, John
 ```
 
-What's `:NAME`, you ask? Well, although `NAME` itself is a **word**, when saying "hello", we want to use the value passed in as an argument to `SAYHELLO`. When `SAYHELLO` was invoked, a new **variable** named `NAME` was created and given the value of `"John"`. In order to get the _value_ of a **variable**, a colon (`:`) is used in front of the variable's name.
+What's `NAME`, you ask? Well, although `NAME` itself is a **word**, when saying "hello", we want to use the value passed in as an argument to `SAYHELLO`. When `SAYHELLO` was invoked, a new **variable** named `NAME` was created and given the value of `"John"`, so that when `PRINT` evaluates `NAME`, `"John"` is the value returned.
 
-When used with `TO`, the list `[ NAME ]` is indicating that `SAYHELLO` expects one argument, and it'll be given the name `NAME`. We can later refer to that value in `SAYHELLO` using `:NAME`.
+When used with `TO`, the list `[ NAME ]` is indicating that `SAYHELLO` expects one argument, and it'll be given the name `NAME`. We can later refer to that value in `SAYHELLO` using `NAME`.
 
 Any number of arguments can be specified:
 
 ```text
 TO SAYHELLO [ FIRST LAST ] {
-    PRINT [ "Hello, " :FIRST " " :LAST ]
+    PRINT [ "Hello, " FIRST " " LAST ]
 }
 SAYHELLO "John" "Smith"
 > Hello, John Smith
@@ -94,23 +94,16 @@ You've already seen how to use variables inside of word definitions, but you can
 
 ```text
 LET NAME "John"
-PRINT [ "Hello, " :NAME ]
+PRINT [ "Hello, " NAME ]
 > Hello, John
 ```
 
-Just like when defining parameter names in a word definition, `LET` expects that you'll name a variable using a **word**. In fact if you try to use `:` here, you'll get an error:
-
-```text
-LET :NAME "John"
-> Expected a WORD; got VARIABLE. (at 1:5)
-```
-
-Once a variable is defined using `LET` you can refer to it using the `:<NAME>` form. Unlike words, you can use `LET` as many times as you want to redefine a variable.
+Once a variable is defined using `LET` you can refer to it using the `<NAME>` form. Unlike words, you can use `LET` as many times as you want to redefine a variable.
 
 ```text
 LET NAME "John"
 LET NAME "Martha"
-PRINT :NAME
+PRINT NAME
 > Martha
 ```
 
@@ -122,9 +115,9 @@ A **block** is a series of words inside `{...}`. Thus far you've not had to use 
 LET NAME "John"
 {
     LET NAME "Martha"
-    PRINT :NAME
+    PRINT NAME
 }
-PRINT :NAME
+PRINT NAME
 > Martha
 > John
 ```
@@ -136,7 +129,7 @@ Variables outside of the scope can be accessed—they just can't be changed, how
 ```text
 LET NAME "John"
 {
-    PRINT :NAME
+    PRINT NAME
 }
 > John
 ```

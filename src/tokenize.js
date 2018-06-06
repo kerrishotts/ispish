@@ -93,6 +93,8 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
                 }
             } else if (!whitespace.test(ch)) {
                 str += ch;
+            } else {
+                newToken = true;
             }
 
             if (!newToken) {

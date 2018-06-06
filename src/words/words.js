@@ -91,6 +91,13 @@ module.exports = {
         precedence: 0,
         impl: require('./impl/print.js'),
     },
+    PRINTCODE: {
+        native: true,
+        lhs: 0,
+        rhs: 1,
+        precedence: 0,
+        impl: require('./impl/printCode.js'),
+    },
     REM: {
         native: true,
         lhs: 0,

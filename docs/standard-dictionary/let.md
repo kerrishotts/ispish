@@ -2,7 +2,7 @@
 
 ![LET Syntax](../assets/let.png)
 
-Assigns the result of `EXPR` to a new variable in the current scope named `WORD`. Variables are dereferenced using the `:` form.
+Assigns the result of `EXPR` to a new variable in the current scope named `WORD`.
 
 > **IMPORTANT**:
 >
@@ -10,7 +10,15 @@ Assigns the result of `EXPR` to a new variable in the current scope named `WORD`
 
 ```text
 LET A 5
-LET B :A + 5
-PRINT :B
+LET B A + 5
+PRINT B
 → 10
+```
+
+`LET` can also be used to extract values out of lists, like so:
+
+```text
+LET [FIRST MIDDLE LAST] ["John" "F" "Kennedy"]
+PRINT [LAST ", " FIRST MIDDLE]
+→ Kennedy, John F
 ```

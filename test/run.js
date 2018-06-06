@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const { expect } = require('chai');
-const { run } = require('../index.js');
+const { run, reset } = require('../index.js');
 
 const fixtures = require('./fixtures');
 
@@ -131,6 +131,7 @@ print name
             name, code, result, error,
         } = {}) => {
             it(name, () => {
+                    reset();
                 if (error) {
                     expect(() => run(code)).throws(error);
                 } else {
@@ -150,6 +151,7 @@ print name
             }))
             .forEach(({ fixture, code } = {}) => {
                 it(fixture, () => {
+                    reset();
                     const r = run(code);
                     if (r.isList) {
                         expect(r.value.map(i => i.value)).to.deep.equal(Array.from(

@@ -10,7 +10,7 @@ rem "
 to power [ x y ] {
     let temp 1
     repeat y [
-        let temp ( :temp * x )
+        let temp ( temp * x )
     ]
     temp
 }
@@ -39,6 +39,7 @@ to find [ list fn ] {
 }
 
 to reduce [ list fn acc ] {
+    print "bye"
     let acc acc
     let idx 0
     let len (size list)
@@ -50,9 +51,11 @@ to reduce [ list fn acc ] {
     acc
 }
 
-to addAll [ list ] {
-    reduce list {acc + item} 0
+to addAll [ l ] {
+    print "hi"
+    reduce l {acc + item} 0
 }
+
 
 [
     "2 ^ 2 == 4" ((power 2 2) == 4)

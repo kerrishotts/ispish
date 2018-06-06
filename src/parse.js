@@ -18,7 +18,7 @@ function getArityFor(token) {
         return {
             lhs: 0,
             rhs: 0,
-            precedence: -100,
+            precedence: 1000,
         };
     }
     return defaultArity;
@@ -34,6 +34,9 @@ function parse(tokens) {
     while (parseTokens.filter(token => !token.isExpr).length > 0) {
         // find the token (and position) with the highest precedence
         const posOfHighestToken = parseTokens.reduce((highTokenPos, token, idx, arr) => {
+            if (token.isExpr) {
+                return highTokenPos;
+            }
             if (highTokenPos < 0) {
                 return idx;
             }
