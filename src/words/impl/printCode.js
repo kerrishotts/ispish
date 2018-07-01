@@ -1,4 +1,4 @@
-const { Token, KINDS } = require('../../Token');
+import { Token, KINDS } from '../../Token.js';
 
 const tokenToString = (token) => {
     if (token.isNumber) {
@@ -47,4 +47,4 @@ const print = ({
     }
 };
 
-module.exports = print;
+export default print;

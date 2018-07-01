@@ -5,4 +5,4 @@ function createScope(parent, global = {}) {
     return scope;
 }
 
-module.exports = createScope;
+export default createScope;

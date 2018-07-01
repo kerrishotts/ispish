@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ispish Interactive Console</title>
+</head>
+
+<body>
+    <h1>ispish</h1>
+    <form id="form" action="#">
+    <textarea rows=7 cols=40 id="code">
+2 + 2</textarea>
+    <br/>
+    <input type="submit" />
+    </form>
+    <canvas id="graphics" width=320 height=240></canvas>
+    <div id="log">
+       <div>Output:</div>
+    </div>
+    <script defer type="module">
+        if (localStorage.getItem("code")) {
+            document.getElementById("code").value = localStorage.getItem("code");
+        }
+        const log = (...args) => {
+            const logEl = document.getElementById("log");
+            const el = document.createElement("div");
+            el.textContent = args.join(" ");
+            logEl.appendChild(el);
+        }
+        
+        const graphics = document.getElementById("graphics");
+        const ctx = graphics.getContext("2d");
+        
+        const scope = {__graphics__: ctx};
+        
+        console.log = log;
+
+        import { KINDS, Token } from '../src/Token.js';
+        import evaluate from '../src/evaluate.js';
+        import { run, reset } from '../index.js';
+
+        const form = document.getElementById("form");
+        form.onsubmit = evt => {
+            try {
+                const code = document.getElementById("code").value;
+                localStorage.setItem("code", code);
+                let r = run(code, scope);
+                if (r !== undefined) {
+                    const printExpr = new Token({
+                        kind: KINDS.EXPR,
+                        value: new Token({
+                            kind: KINDS.WORD,
+                            value: 'PRINTCODE',
+                        }),
+                        tokens: [r],
+                    });
+    
+                    r = evaluate(printExpr);
+                } else {
+                    r = '(no return)';
+                }
+            } catch (err) {
+                log(err.message);
+            }
+            evt.preventDefault();
+            return false;
+        };
+        
+    </script>
+</body>
+</html>

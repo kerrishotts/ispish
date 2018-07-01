@@ -1,4 +1,4 @@
-const { Token, KINDS } = require('../../Token');
+import { Token, KINDS }  from '../../Token.js';
 
 const tokenToString = (token) => {
     if (token.isNumber) {
@@ -13,7 +13,7 @@ const tokenToString = (token) => {
     return '';
 };
 
-const print = ({
+export default print = ({
     evaluate, token, scope, globalScope,
 } = {}) => {
     const expr = evaluate(Token.guard(token.leftChild), scope);
@@ -24,5 +24,3 @@ const print = ({
         value: r.toString(),
     });
 };
-
-module.exports = print;

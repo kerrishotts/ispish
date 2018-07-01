@@ -1,6 +1,6 @@
-const { KINDS, Token } = require('../../Token.js');
+import { KINDS, Token } from '../../Token.js';
 
-module.exports = ({
+export default ({
     evaluate, token, scope, globalScope,
 } = {}) => {
 

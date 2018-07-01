@@ -1,5 +1,8 @@
-const { KINDS, Token } = require('./Token.js');
-const createScope = require('./createScope');
+
+import { KINDS, Token } from './Token.js';
+import createScope from './createScope.js';
+
+import wordRegistry from './WordRegistry.js';
 
 function lookup(variable, scope) {
     let curScope = scope;
@@ -12,7 +15,7 @@ function lookup(variable, scope) {
     if (scope.__global__ && scope.__global__.hasOwnProperty(variable)) {
         return scope.__global__[variable];
     }
-    throw new Error(`Can't find ${variable}`);
+    throw new Error(`Cannot find ${variable}`);
 }
 
 /**
@@ -22,7 +25,8 @@ function lookup(variable, scope) {
  * @returns {*}
  */
 function evaluate(ast, scope = {}) {
-    const { words: arities } = require('./WordRegistry.js');
+   // const { words: arities } = require('./WordRegistry.js');
+    const arities = wordRegistry.words;
     if (ast === undefined) {
         return undefined;
     }
@@ -147,7 +151,27 @@ function evaluate(ast, scope = {}) {
             }
             newScope._ARGS = args;
             newScope._REST = rest;
-            return evaluate(func, newScope);
+            if (!func.native) {
+                return evaluate(func, newScope);
+            } else {
+                // this is a JS function, which means we handle this
+                // differently!
+                let jsCode = evaluate(func, newScope).unboxed;
+                jsCode = Object.entries(newScope).reduce(
+                    (acc, [k, v]) => {
+                        acc = acc.replace("${" + k + "}", `newScope.${k}${v instanceof Token ? '.unboxed' : ''}`);
+                        return acc;
+                    }, jsCode
+                );
+                const r = eval(jsCode);
+                if (r instanceof Token) {
+                    return r;
+                }
+                return new Token({
+                    kind: KINDS.NUMBER,
+                    value: r
+                });
+            }
         } catch (err) {
             throw new Error(`${err.message} ${token.where}`);
         }
@@ -155,4 +179,4 @@ function evaluate(ast, scope = {}) {
     return undefined;
 }
 
-module.exports = evaluate;
+export default evaluate;

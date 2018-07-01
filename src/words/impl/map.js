@@ -1,7 +1,7 @@
-const { KINDS, Token } = require('../../Token.js');
-const createScope = require('../../createScope.js');
+import { KINDS, Token } from '../../Token.js';
+import createScope from '../../createScope.js';
 
-module.exports = ({
+export default ({
     evaluate, token, scope, globalScope,
 } = {}) => {
     const list = Token.guard(evaluate(Token.guard(token.leftChild), scope), {

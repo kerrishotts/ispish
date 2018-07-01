@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     '+': {
         native: true,
         lhs: 1,

@@ -1,13 +1,13 @@
-const wordRegistry = require('./src/WordRegistry.js');
-const { KINDS, Token } = require('./src/Token.js');
-const tokenize = require('./src/tokenize.js');
-const parse = require('./src/parse.js');
-const evaluate = require('./src/evaluate.js');
-const standardWords = require('./src/standardWords.js');
+import wordRegistry from './src/WordRegistry.js';
+import { KINDS, Token } from './src/Token.js';
+import tokenize from './src/tokenize.js';
+import parse from './src/parse.js';
+import evaluate from './src/evaluate.js';
+import standardWords from './src/standardWords.js';
 
 standardWords(wordRegistry);
 
-function run(code, scope = {}) {
+export function run(code, scope = {}) {
     let tokens;
     let ast;
 
@@ -41,16 +41,7 @@ ${err.stack}`);
     }
 }
 
-module.exports = {
-    wordRegistry,
-    Token,
-    KINDS,
-    tokenize,
-    parse,
-    evaluate,
-    run,
-    reset: () => {
+export function reset() {
         wordRegistry.reset();
         standardWords(wordRegistry);
-    },
-};
+}

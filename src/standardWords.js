@@ -1,6 +1,6 @@
-const words = require('./words');
+import words from './words/index.js';
 
-function standardWords(wordRegistry) {
+export default function standardWords(wordRegistry) {
     Object.entries(words).forEach(([word, meta]) => {
         wordRegistry.add(word, meta);
     });
@@ -8,5 +8,3 @@ function standardWords(wordRegistry) {
     // aliases
     wordRegistry.add('RPT', words.REPEAT);
 }
-
-module.exports = standardWords;

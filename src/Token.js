@@ -1,7 +1,7 @@
 /**
  * KINDS enumerates the various types of tokens that ispish understands
  */
-const KINDS = {
+export const KINDS = {
     NUMBER: 'NUMBER',
     TUPLE: 'TUPLE',
     LIST: 'LIST',
@@ -26,7 +26,7 @@ const _pos = Symbol('_pos');
  * version of a string, an abstract syntax tree, and handles type
  * handling during code execution.
  */
-class Token {
+export class Token {
     /**
      *
      * @param {*} [param0 = {}]
@@ -399,8 +399,3 @@ class Token {
         return token;
     }
 }
-
-module.exports = {
-    KINDS,
-    Token,
-};

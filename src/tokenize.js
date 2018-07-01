@@ -1,4 +1,4 @@
-const { Token, KINDS } = require('./Token.js');
+import { Token, KINDS } from './Token.js';
 
 function tokenize(code, { line = 1, pos = 1 } = {}) {
     const whitespace = /\s/;
@@ -174,4 +174,4 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
     return tokens;
 }
 
-module.exports = tokenize;
+export default tokenize;

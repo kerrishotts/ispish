@@ -1,5 +1,6 @@
-const { KINDS, Token } = require('./Token.js');
-const wordRegistry = require('./WordRegistry.js');
+
+import { KINDS, Token } from './Token.js';
+import wordRegistry from './WordRegistry.js';
 
 function getArityFor(token) {
     const { words: arities } = wordRegistry;
@@ -97,7 +98,7 @@ function parse(tokens) {
 
             // special case -- we need to figure out the arity for functions
             // TO procs ARENT SCOPED!!!!
-            if (token.isWord && token.value === 'TO') {
+            if (token.isWord && (token.value === 'TO' || token.value === 'TO.NATIVE')) {
                 // name is in rhsTokens[0] and list of args is in rhsTokens[1]
                 const funcName = rhsTokens[0].value;
                 const argTokens = rhsTokens[1].value;
@@ -135,4 +136,4 @@ function parse(tokens) {
     });
 }
 
-module.exports = parse;
+export default parse;

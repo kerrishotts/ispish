@@ -25,4 +25,4 @@ class WordRegistry {
 
 const wordRegistry = new WordRegistry();
 
-module.exports = wordRegistry;
+export default wordRegistry;

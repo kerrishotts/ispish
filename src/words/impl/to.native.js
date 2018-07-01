@@ -41,4 +41,5 @@ export default ({
 
     globalScope[varName] = body;
     globalScope[varName].args = args;
+    globalScope[varName].native = true;
 };
