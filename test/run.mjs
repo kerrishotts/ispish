@@ -1,11 +1,12 @@
 /* global describe, it */
 import { run, reset } from '../index.mjs';
 
-const fs = require('fs');
-const path = require('path');
-const { expect } = require('chai');
+import fs from 'fs';
+import path from 'path';
+import chai from 'chai';
+const { expect } = chai;
 
-const fixtures = require('./fixtures');
+import fixtures from './fixtures/index.js';
 
 describe('run', () => {
     describe('#simple', () => {
@@ -13,7 +14,7 @@ describe('run', () => {
             {
                 name: 'error-1',
                 code: 'printify "Hello, world"',
-                error: "Can't find PRINTIFY (at 1:1)",
+                error: 'Cannot find PRINTIFY (at 1:1)',
             },
             {
                 name: 'error-1',
@@ -128,11 +129,9 @@ print name
                 result: 6,
             },
         ];
-        tests.forEach(({
-            name, code, result, error,
-        } = {}) => {
+        tests.forEach(({ name, code, result, error } = {}) => {
             it(name, () => {
-                    reset();
+                reset();
                 if (error) {
                     expect(() => run(code)).throws(error);
                 } else {
@@ -146,7 +145,7 @@ print name
         fixtures
             .map(fixture => ({
                 fixture,
-                code: fs.readFileSync(path.join(__dirname, 'fixtures', fixture), {
+                code: fs.readFileSync(path.join('.', 'test', 'fixtures', fixture), {
                     encoding: 'utf8',
                 }),
             }))
@@ -155,10 +154,12 @@ print name
                     reset();
                     const r = run(code);
                     if (r.isList) {
-                        expect(r.value.map(i => i.value)).to.deep.equal(Array.from(
-                            { length: r.value.length },
-                            (_, idx) => (!r.value[idx].isNumber ? r.value[idx].value : 1),
-                        ));
+                        expect(r.value.map(i => i.value)).to.deep.equal(
+                            Array.from(
+                                { length: r.value.length },
+                                (_, idx) => (!r.value[idx].isNumber ? r.value[idx].value : 1)
+                            )
+                        );
                     }
                     if (Array.isArray(r)) {
                         r.forEach(i => expect(i).to.be.equal(1));

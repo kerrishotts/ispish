@@ -4,7 +4,8 @@
 import { Token, KINDS } from '../src/Token.mjs';
 import tokenize from '../src/tokenize.mjs';
 
-const { expect } = require('chai');
+import chai from 'chai';
+const { expect } = chai;
 /*
 const fixtures = require('./fixtures');
 

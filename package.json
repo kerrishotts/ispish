@@ -7,8 +7,8 @@
         "ispish": "./cli.mjs"
     },
     "scripts": {
-        "test": "mocha",
-        "cover": "nyc mocha",
+        "test": "mocha-esm test/*.mjs",
+        "cover": "nyc npm test",
         "lint": "eslint 'src/**/*.js' 'src/**/*.mjs'"
     },
     "repository": {
@@ -45,6 +45,7 @@
         "eslint-config-airbnb-base": "^12.1.0",
         "eslint-plugin-import": "^2.12.0",
         "mocha": "^5.2.0",
+        "mocha-esm": "^1.0.2",
         "nyc": "^11.8.0"
     },
     "nyc": {
