@@ -1,0 +1,62 @@
+REM "create a native JS function"
+to.native double [ x ] {
+    "
+        return {{X}} * 2;
+    "
+}
+
+REM "native JS function can take two parameters"
+to.native power [ x y ] {
+    "
+        return Math.pow({{X}}, {{Y}});
+    "
+}
+
+REM "native JS function can take three parameters"
+to.native inRange [ a l h ] {
+    "
+        return ({{A}} >= {{L}} && {{A}} <= {{H}}) ? 1 : 0;
+    "
+}
+
+REM "Native JS can return a string"
+to.native uppercase [ s ] {
+    "
+        return {{S}}.toUpperCase();
+    "
+}
+
+REM "Can return a list"
+to.native sequence [ n ] {
+    "
+        return Array.from({length: {{N}}}, (_, idx) => idx);
+    "
+}
+
+REM "Can combine lists"
+to.native combine [ a b ] {
+    "
+        return [ ...{{A}}, ...{{B}} ];
+    "
+}
+
+REM "Can concat strings"
+to.native || [ a b ] {
+    "
+        return {{A}} + {{B}};
+    "
+}
+
+
+
+
+[
+    "can call double" ((double 10) == 20)
+    "can call power" ((power 2 2) == 4)
+    "can call inrange" ((inRange 5 1 10) )
+    "can call inrange that fails" ((inRange 5 6 10) == 0)
+    "can uppercase string" ((uppercase "Hello") == "HELLO")
+    "can get a list" ((sequence 4) == [0 1 2 3])
+    "can combine a list" ((combine [1 2] [3 4]) == [1 2 3 4])
+    "can concat a list" ((|| "hi" "there") == "hithere")
+]

@@ -54,7 +54,7 @@ function evaluate(ast, scope = {}) {
                 value: token.value.value,
                 tokens: token.tokens,
             }),
-            scope,
+            scope
         );
     }
 
@@ -69,7 +69,7 @@ function evaluate(ast, scope = {}) {
     }
     if (token.isTuple) {
         let r;
-        token.value.forEach((token) => {
+        token.value.forEach(token => {
             const result = evaluate(token, scope);
             if (result !== undefined) {
                 r = result;
@@ -162,10 +162,13 @@ function evaluate(ast, scope = {}) {
                 // differently!
                 let jsCode = evaluate(func, newScope).unboxed;
                 jsCode = Object.entries(newScope).reduce((acc, [k, v]) => {
-                    acc = acc.replace(
-                        `{{${k}}}`,
-                        `this.scope.${k}${v instanceof Token ? '.unboxed' : ''}`,
-                    );
+                    const repl = `{{${k}}}`;
+                    while (acc.indexOf(repl) > -1) {
+                        acc = acc.replace(
+                            repl,
+                            `this.scope.${k}${v instanceof Token ? '.unboxed' : ''}`,
+                        );
+                    }
                     return acc;
                 }, jsCode);
 
