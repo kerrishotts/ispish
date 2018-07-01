@@ -398,4 +398,25 @@ export class Token {
         }
         return token;
     }
+
+    static box(primitive) {
+        if (typeof primitive === 'string') {
+            return new Token({
+                kind: KINDS.STRING,
+                value: primitive,
+            });
+        }
+        if (typeof primitive === 'number') {
+            return new Token({
+                kind: KINDS.NUMBER,
+                value: primitive,
+            });
+        }
+        if (Array.isArray(primitive)) {
+            return new Token({
+                kind: KINDS.LIST,
+                value: primitive.map(i => Token.box(i)),
+            });
+        }
+    }
 }

@@ -1,8 +1,10 @@
 /* global describe, it */
 // const fs = require('fs');
 // const path = require('path');
+import { Token, KINDS } from '../src/Token.mjs';
+import tokenize from '../src/tokenize.mjs';
+
 const { expect } = require('chai');
-const { Token, KINDS } = require('../src/Token.js');
 /*
 const fixtures = require('./fixtures');
 
@@ -15,7 +17,6 @@ fixtures.map(fixture => {
 })
 */
 
-const tokenize = require('../src/tokenize.js');
 
 describe('Tokenize', () => {
     describe('#simple', () => {

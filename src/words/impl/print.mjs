@@ -1,6 +1,6 @@
-import { Token, KINDS }  from '../../Token.js';
+import { Token, KINDS } from '../../Token.mjs';
 
-const tokenToString = (token) => {
+const tokenToString = token => {
     if (token.isNumber) {
         return token.value.toString();
     }
@@ -13,9 +13,7 @@ const tokenToString = (token) => {
     return '';
 };
 
-export default print = ({
-    evaluate, token, scope, globalScope,
-} = {}) => {
+export default ({ evaluate, token, scope, globalScope } = {}) => {
     const expr = evaluate(Token.guard(token.leftChild), scope);
     const r = tokenToString(expr);
     console.log(r);

@@ -1,8 +1,9 @@
+/* eslint-disable no-prototype-builtins */
 
-import { KINDS, Token } from './Token.js';
-import createScope from './createScope.js';
+import { KINDS, Token } from './Token.mjs';
+import createScope from './createScope.mjs';
 
-import wordRegistry from './WordRegistry.js';
+import wordRegistry from './WordRegistry.mjs';
 
 function lookup(variable, scope) {
     let curScope = scope;
@@ -25,7 +26,7 @@ function lookup(variable, scope) {
  * @returns {*}
  */
 function evaluate(ast, scope = {}) {
-   // const { words: arities } = require('./WordRegistry.js');
+    // const { words: arities } = require('./WordRegistry.js');
     const arities = wordRegistry.words;
     if (ast === undefined) {
         return undefined;
@@ -153,25 +154,36 @@ function evaluate(ast, scope = {}) {
             newScope._REST = rest;
             if (!func.native) {
                 return evaluate(func, newScope);
-            } else {
+            }
+
+            let compiledFn = func.__compiled__;
+            if (!compiledFn) {
                 // this is a JS function, which means we handle this
                 // differently!
                 let jsCode = evaluate(func, newScope).unboxed;
-                jsCode = Object.entries(newScope).reduce(
-                    (acc, [k, v]) => {
-                        acc = acc.replace("${" + k + "}", `newScope.${k}${v instanceof Token ? '.unboxed' : ''}`);
-                        return acc;
-                    }, jsCode
-                );
-                const r = eval(jsCode);
-                if (r instanceof Token) {
-                    return r;
-                }
-                return new Token({
-                    kind: KINDS.NUMBER,
-                    value: r
-                });
+                jsCode = Object.entries(newScope).reduce((acc, [k, v]) => {
+                    acc = acc.replace(
+                        `{{${k}}}`,
+                        `this.scope.${k}${v instanceof Token ? '.unboxed' : ''}`,
+                    );
+                    return acc;
+                }, jsCode);
+
+                compiledFn = new Function(jsCode); // eslint-disable-line no-new-func
+
+                func.__compiled__ = compiledFn;
             }
+            const r = compiledFn.apply({
+                scope: newScope,
+                Token,
+                KINDS,
+                args,
+                rest,
+            });
+            if (r instanceof Token) {
+                return r;
+            }
+            return Token.box(r);
         } catch (err) {
             throw new Error(`${err.message} ${token.where}`);
         }

@@ -1,6 +1,6 @@
 
-import { KINDS, Token } from './Token.js';
-import wordRegistry from './WordRegistry.js';
+import { KINDS, Token } from './Token.mjs';
+import wordRegistry from './WordRegistry.mjs';
 
 function getArityFor(token) {
     const { words: arities } = wordRegistry;

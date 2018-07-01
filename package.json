@@ -2,14 +2,14 @@
     "name": "ispish",
     "version": "0.0.1",
     "description": "A lisp/logo-like language",
-    "main": "index.js",
+    "main": "index.mjs",
     "bin": {
-        "ispish": "./cli.js"
+        "ispish": "./cli.mjs"
     },
     "scripts": {
         "test": "mocha",
         "cover": "nyc mocha",
-        "lint": "eslint 'src/**/*.js'"
+        "lint": "eslint 'src/**/*.js' 'src/**/*.mjs'"
     },
     "repository": {
         "type": "git",
@@ -52,7 +52,8 @@
         "per-file": true,
         "lines": 75,
         "include": [
-            "src/**/*.js"
+            "src/**/*.js",
+            "src/**/*.mjs"
         ],
         "exclude": [
             "test/**/*.js"
@@ -74,10 +75,16 @@
                 "name": "esdoc-standard-plugin"
             },
             {
-                "name": "esdoc-external-ecmascript-plugin", "option": {"enable": false}
+                "name": "esdoc-external-ecmascript-plugin",
+                "option": {
+                    "enable": false
+                }
             },
             {
-                "name": "esdoc-ecmascript-proposal-plugin", "option": {"enable": false}
+                "name": "esdoc-ecmascript-proposal-plugin",
+                "option": {
+                    "enable": false
+                }
             },
             {
                 "name": "esdoc-node"

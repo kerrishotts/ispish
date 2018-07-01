@@ -1,4 +1,4 @@
-import words from './words/index.js';
+import words from './words/index.mjs';
 
 export default function standardWords(wordRegistry) {
     Object.entries(words).forEach(([word, meta]) => {

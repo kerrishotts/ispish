@@ -1,5 +1,5 @@
-import { KINDS, Token } from '../../Token.js';
-import createScope from '../../createScope.js';
+import { KINDS, Token } from '../../Token.mjs';
+import createScope from '../../createScope.mjs';
 
 export default ({
     evaluate, token, scope, globalScope,

@@ -1,7 +1,10 @@
-#!/usr/bin/env node
-const fs = require('fs');
-const getStdin = require('get-stdin');
-const repl = require('repl');
+#!/usr/bin/env node --experimental-modules
+import { reset, run, evaluate, Token, KINDS } from './index.mjs';
+
+import fs from 'fs';
+import getStdin from 'get-stdin';
+import repl from 'repl';
+
 
 const [, , ...args] = process.argv;
 
@@ -10,7 +13,7 @@ const options = {
     interactive: false,
 };
 
-args.forEach((arg) => {
+args.forEach(arg => {
     if (arg.startsWith('--')) {
         options[arg.substr(2)] = true;
     }
@@ -19,7 +22,6 @@ args.forEach((arg) => {
 const files = args.filter(arg => !arg.startsWith('--'));
 
 function exec(code) {
-    const { run } = require('./index.js');
     const r = run(code);
     if (options.print) {
         console.log(r.unboxed);
@@ -38,9 +40,6 @@ getStdin().then((str) => {
 });
 
 if (options.interactive) {
-    const {
-        reset, run, evaluate, Token, KINDS,
-    } = require('./index.js');
     let scope = {};
     const isRecoverableError = e => /(Unexpected end of input|didn't receive one)/.test(e.message);
     const exec = (cmd, context, filename, callback) => {

@@ -1,4 +1,4 @@
-import { Token, KINDS } from './Token.js';
+import { Token, KINDS } from './Token.mjs';
 
 function tokenize(code, { line = 1, pos = 1 } = {}) {
     const whitespace = /\s/;

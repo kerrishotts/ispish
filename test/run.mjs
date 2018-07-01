@@ -1,8 +1,9 @@
 /* global describe, it */
+import { run, reset } from '../index.mjs';
+
 const fs = require('fs');
 const path = require('path');
 const { expect } = require('chai');
-const { run, reset } = require('../index.js');
 
 const fixtures = require('./fixtures');
 

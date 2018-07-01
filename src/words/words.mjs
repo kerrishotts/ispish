@@ -1,20 +1,20 @@
 
-import letImpl from './impl/let.js';
-import exitImpl from './impl/exit.js';
-import exitWithImpl from './impl/exitWith.js';
-import toImpl from './impl/to.js';
-import toNativeImpl from './impl/to.native.js';
-import whenImpl from './impl/when.js';
-import ifImpl from './impl/if.js';
-import elseImpl from './impl/else.js';
-import repeatImpl from './impl/repeat.js';
-import mapImpl from './impl/map.js';
-import sumImpl from './impl/sum.js';
-import dotImpl from './impl/dot.js';
-import sizeImpl from './impl/size.js';
-import printImpl from './impl/print.js';
-import printCodeImpl from './impl/printCode.js';
-import remImpl from './impl/rem.js';
+import letImpl from './impl/let.mjs';
+import exitImpl from './impl/exit.mjs';
+import exitWithImpl from './impl/exitWith.mjs';
+import toImpl from './impl/to.mjs';
+import toNativeImpl from './impl/to.native.mjs';
+import whenImpl from './impl/when.mjs';
+import ifImpl from './impl/if.mjs';
+import elseImpl from './impl/else.mjs';
+import repeatImpl from './impl/repeat.mjs';
+import mapImpl from './impl/map.mjs';
+import sumImpl from './impl/sum.mjs';
+import dotImpl from './impl/dot.mjs';
+import sizeImpl from './impl/size.mjs';
+import printImpl from './impl/print.mjs';
+import printCodeImpl from './impl/printCode.mjs';
+import remImpl from './impl/rem.mjs';
 
 export default {
     LET: {

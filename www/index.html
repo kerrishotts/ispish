@@ -27,17 +27,17 @@
             el.textContent = args.join(" ");
             logEl.appendChild(el);
         }
-        
+
         const graphics = document.getElementById("graphics");
         const ctx = graphics.getContext("2d");
-        
+
         const scope = {__graphics__: ctx};
-        
+
         console.log = log;
 
-        import { KINDS, Token } from '../src/Token.js';
-        import evaluate from '../src/evaluate.js';
-        import { run, reset } from '../index.js';
+        import { KINDS, Token } from '../src/Token.mjs';
+        import evaluate from '../src/evaluate.mjs';
+        import { run, reset } from '../index.mjs';
 
         const form = document.getElementById("form");
         form.onsubmit = evt => {
@@ -54,7 +54,7 @@
                         }),
                         tokens: [r],
                     });
-    
+
                     r = evaluate(printExpr);
                 } else {
                     r = '(no return)';
@@ -65,7 +65,7 @@
             evt.preventDefault();
             return false;
         };
-        
+
     </script>
 </body>
 </html>

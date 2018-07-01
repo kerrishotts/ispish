@@ -1,4 +1,4 @@
-import { Token, KINDS } from '../../Token.js';
+import { Token, KINDS } from '../../Token.mjs';
 
 export default ({
     evaluate, token, scope, globalScope,

@@ -1,5 +1,5 @@
-import operators from './operators.js';
-import words from './words.js';
+import operators from './operators.mjs';
+import words from './words.mjs';
 
 export default Object.assign({}, operators, words);
 
