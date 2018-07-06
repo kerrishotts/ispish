@@ -1,3 +1,20 @@
+to.native is [a b] {
+    "
+        if (this.scope.A.kind === this.KINDS[{{B}}.toUpperCase()]) {
+            return 1;
+        }
+        return 0;
+    "
+}
+
+to.native guard [ expr kind ] {
+    "
+        this.Token.guard(this.scope.EXPR, {expected: this.KINDS[{{KIND}}.toUpperCase()]});
+        return this.scope.EXPR;
+    "
+}
+
+
 REM "create a native JS function"
 to.native double [ x ] {
     "
@@ -47,9 +64,6 @@ to.native || [ a b ] {
     "
 }
 
-
-
-
 [
     "can call double" ((double 10) == 20)
     "can call power" ((power 2 2) == 4)
@@ -59,4 +73,8 @@ to.native || [ a b ] {
     "can get a list" ((sequence 4) == [0 1 2 3])
     "can combine a list" ((combine [1 2] [3 4]) == [1 2 3 4])
     "can concat a list" ((|| "hi" "there") == "hithere")
+    "can check a type" ((is "hi" "string") == 1)
+    "can check a type.2" ((is 4 "number") == 1)
+    "can check a type.3" ((is [ 1 2 ] "list") == 1)
+    "guard" ((guard 1 "number"))
 ]

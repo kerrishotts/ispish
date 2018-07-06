@@ -1,16 +1,19 @@
 #!/usr/bin/env node --experimental-modules
 import { reset, run, evaluate, Token, KINDS } from './index.mjs';
+import createScope from './src/createScope.mjs';
 
 import fs from 'fs';
 import getStdin from 'get-stdin';
 import repl from 'repl';
 
+const scope = {};
 
 const [, , ...args] = process.argv;
 
 const options = {
     print: false,
     interactive: false,
+    private: false,
 };
 
 args.forEach(arg => {
@@ -22,7 +25,8 @@ args.forEach(arg => {
 const files = args.filter(arg => !arg.startsWith('--'));
 
 function exec(code) {
-    const r = run(code);
+    const newScope = options.private ? {} : createScope(scope, scope);
+    const r = run(code, newScope);
     if (options.print) {
         console.log(r.unboxed);
     }
@@ -40,7 +44,7 @@ getStdin().then((str) => {
 });
 
 if (options.interactive) {
-    let scope = {};
+    //let scope = {};
     const isRecoverableError = e => /(Unexpected end of input|didn't receive one)/.test(e.message);
     const exec = (cmd, context, filename, callback) => {
         try {

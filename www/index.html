@@ -31,7 +31,14 @@
         const graphics = document.getElementById("graphics");
         const ctx = graphics.getContext("2d");
 
-        const scope = {__graphics__: ctx};
+        const scope = {
+            __graphics__: {
+                ctx,
+                el : graphics,
+                w : graphics.width,
+                h : graphics.height
+            }
+        };
 
         console.log = log;
 

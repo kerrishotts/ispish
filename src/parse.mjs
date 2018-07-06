@@ -1,4 +1,3 @@
-
 import { KINDS, Token } from './Token.mjs';
 import wordRegistry from './WordRegistry.mjs';
 
@@ -90,10 +89,11 @@ function parse(tokens) {
             });
         } else {
             const arity = getArityFor(token);
+            const isOp = arity.op;
             const lhsTokens = parseTokens.slice(posOfHighestToken - arity.lhs, posOfHighestToken);
             const rhsTokens = parseTokens.slice(
                 posOfHighestToken + 1,
-                posOfHighestToken + arity.rhs + 1,
+                posOfHighestToken + arity.rhs + 1
             );
 
             // special case -- we need to figure out the arity for functions
@@ -110,12 +110,30 @@ function parse(tokens) {
                 });
             }
 
-            const exprToken = new Token({
-                kind: KINDS.EXPR,
-                value: token,
-                line: token.line,
-                pos: token.pos,
-            });
+            let exprToken;
+
+            if (token.isWord && isOp) {
+                exprToken = new Token({
+                    kind: KINDS.EXPR,
+                    value: new Token({
+                        kind: KINDS.OP,
+                        value: token.value,
+                        line: token.line,
+                        pos: token.pos,
+                        tokens: token.tokens,
+                    }),
+                    line: token.line,
+                    pos: token.pos,
+                });
+            } else {
+                // op looks like a word but isn't
+                exprToken = new Token({
+                    kind: KINDS.EXPR,
+                    value: token,
+                    line: token.line,
+                    pos: token.pos,
+                });
+            }
             exprToken.tokens = parse([...lhsTokens, ...rhsTokens]);
 
             parseTokens = [

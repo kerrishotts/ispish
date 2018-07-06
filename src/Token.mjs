@@ -342,9 +342,7 @@ export class Token {
         let { value, tokens } = this;
         if (Array.isArray(value)) {
             if (value.length > 0) {
-                value = `[ ${value
-                    .map(v => (v instanceof Token ? v.description : v))
-                    .join(' ')} ]`;
+                value = `[ ${value.map(v => (v instanceof Token ? v.description : v)).join(' ')} ]`;
             } else {
                 value = '[]';
             }
@@ -381,7 +379,9 @@ export class Token {
             throw new Error(`Expected a ${expected || 'token'}; didn't receive one.`);
         }
         if (token.value === undefined && exists) {
-            throw new Error(`Expected a ${expected || 'token'}; didn't receive one. ${token.where}`);
+            throw new Error(
+                `Expected a ${expected || 'token'}; didn't receive one. ${token.where}`
+            );
         }
         if (typeof expected === 'string') {
             if (!(token.kind === expected)) {
@@ -390,10 +390,9 @@ export class Token {
         }
         if (Array.isArray(expected)) {
             if (!expected.some(kind => kind === token.kind)) {
-                throw new Error(msg ||
-                        `Expected ${expected.join(', ')}; got ${
-                            token.kind
-                        }. ${token.where}`);
+                throw new Error(
+                    msg || `Expected ${expected.join(', ')}; got ${token.kind}. ${token.where}`
+                );
             }
         }
         return token;
@@ -418,5 +417,106 @@ export class Token {
                 value: primitive.map(i => Token.box(i)),
             });
         }
+    }
+
+    /**
+     * returns a value indicating the equality of the two tokens
+     * if less then, -1
+     * if greater than, 1
+     * if equal, 0
+     * if not equal, undefined
+     *
+     * @param {Token} a
+     * @param {Token} b
+     * @return {number?}
+     */
+    static compare(a, b) {
+        if (a.kind === b.kind) {
+            const av = a.value;
+            const bv = b.value;
+            switch (a.kind) {
+                case KINDS.NUMBER:
+                case KINDS.STRING:
+                case KINDS.WORD:
+                    return av < bv ? -1 : av > bv ? 1 : 0;
+                case KINDS.LIST: {
+                    if (av.length === bv.length) {
+                        if (av.every((i, idx) => Token.compare(i, bv[idx]) === 0)) {
+                            return 0;
+                        }
+                    }
+                    return undefined;
+                }
+                default:
+                    return undefined;
+            }
+        } else {
+            return undefined;
+        }
+    }
+
+    static add(a, b) {
+        if (a.kind !== b.kind) {
+            throw new Error(`Operator type mismatch; got ${a.kind} and ${b.kind} ${a.where}`);
+        }
+
+        if (a.kind !== KINDS.LIST) {
+            return new Token({
+                kind: a.kind,
+                value: a.value + b.value,
+                line: a.line,
+                pos: a.pos,
+            });
+        }
+        return new Token({
+            kind: a.kind,
+            value: [...a.value, ...b.value],
+            line: a.line,
+            pos: a.pos,
+        });
+    }
+
+    static sub(a, b) {
+        if (a.kind !== b.kind) {
+            throw new Error(`Operator type mismatch; got ${a.kind} and ${b.kind}`);
+        }
+        if (a.kind !== KINDS.LIST) {
+            return new Token({
+                kind: a.kind,
+                value: a.value - b.value,
+                line: a.line,
+                pos: a.pos,
+            });
+        }
+        return new Token({
+            kind: a.kind,
+            value: a.value.filter(av => b.value.every(bv => Token.compare(av, bv) !== 0)),
+            line: a.line,
+            pos: a.pos,
+        });
+    }
+
+    static mul(a, b) {
+        Token.guard(a, { expected: KINDS.NUMBER });
+        Token.guard(b, { expected: KINDS.NUMBER });
+
+        return new Token({
+            kind: a.kind,
+            value: a.value * b.value,
+            line: a.line,
+            pos: a.pos,
+        });
+    }
+
+    static div(a, b) {
+        Token.guard(a, { expected: KINDS.NUMBER });
+        Token.guard(b, { expected: KINDS.NUMBER });
+
+        return new Token({
+            kind: a.kind,
+            value: a.value / b.value,
+            line: a.line,
+            pos: a.pos,
+        });
     }
 }

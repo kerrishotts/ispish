@@ -107,9 +107,13 @@ function evaluate(ast, scope = {}) {
     if (token.isOp) {
         const lhs = Token.guard(evaluate(Token.guard(token.leftChild), scope));
         const rhs = Token.guard(evaluate(Token.guard(token.rightChild), scope));
+        const r = arities[token.value].impl(lhs, rhs);
+        if (r instanceof Token) {
+            return r;
+        }
         return new Token({
             kind: KINDS.NUMBER,
-            value: arities[token.value].impl(lhs.value, rhs.value),
+            value: r,
         });
     }
     if (token.isWord) {
@@ -166,7 +170,7 @@ function evaluate(ast, scope = {}) {
                     while (acc.indexOf(repl) > -1) {
                         acc = acc.replace(
                             repl,
-                            `this.scope.${k}${v instanceof Token ? '.unboxed' : ''}`,
+                            `this.scope.${k}${v instanceof Token ? '.unboxed' : ''}`
                         );
                     }
                     return acc;
