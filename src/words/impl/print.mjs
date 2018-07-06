@@ -1,6 +1,9 @@
 import { Token, KINDS } from '../../Token.mjs';
 
 const tokenToString = token => {
+    if (!token) {
+        return '';
+    }
     if (token.isNumber) {
         return token.value.toString();
     }

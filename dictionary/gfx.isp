@@ -1,0 +1,277 @@
+to.native gfx._init [] {
+    "
+        const { ctx } = this.scope.__global__.__graphics__;
+        ctx.fillStyle = 'black';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 1;
+
+        this.scope.__global__.__graphics__.width = 320;
+        this.scope.__global__.__graphics__.height = 240;
+    "
+}
+
+to.native gfx.setSize [ w h ] {
+    "
+        const { ctx } = this.scope.__global__.__graphics__;
+        const { canvas } = ctx;
+
+        canvas.width = {{W}} * devicePixelRatio;
+        canvas.height = {{H}} * devicePixelRatio;
+
+        canvas.style.width = {{W}} + 'px';
+        canvas.style.height = {{H}} + 'px';
+
+        this.scope.__global__.__graphics__.width = {{W}};
+        this.scope.__global__.__graphics__.height = {{H}};
+
+        ctx.scale(devicePixelRatio, devicePixelRatio);
+    "
+}
+
+to gfx.init [] {
+    gfx._init
+    gfx.setSize 320 240
+}
+
+to.native gfx.stroke.color [ color ] {
+    "
+        const { ctx } = this.scope.__global__.__graphics__;
+        ctx.strokeStyle = {{COLOR}};
+    "
+}
+
+to.native gfx.fill.color [ color ] {
+    "
+        const { ctx } = this.scope.__global__.__graphics__;
+        ctx.fillStyle = {{COLOR}};
+    "
+}
+
+to.native color.random [ ] {
+    "
+        const pickableColors = [ '00', '33', '66', '99', 'CC', 'FF' ];
+        const colors = Array.from({length: 3}, _ => pickableColors[Math.floor(Math.random() * 6)]);
+        return this.Token.box('#' + colors.join(''));
+    "
+}
+
+to.native math.random [ ] {
+    "
+        return this.Token.box(Math.random());
+    "
+}
+
+
+to.native gfx.line [ x1 y1 x2 y2 ] {
+    "
+        const { ctx } = this.scope.__global__.__graphics__;
+        ctx.beginPath();
+        ctx.moveTo({{X1}}, {{Y1}});
+        ctx.lineTo({{X2}}, {{Y2}});
+        ctx.stroke();
+    "
+}
+
+to.native gfx.width [] {
+    "
+        const { width, ctx }= this.scope.__global__.__graphics__;
+        return this.Token.box(width);
+    "
+}
+
+to.native gfx.height [] {
+    "
+        const { height, ctx }= this.scope.__global__.__graphics__;
+        return this.Token.box(height);
+    "
+}
+
+to.native gfx.clear [] {
+    "
+        const { width, height, ctx }= this.scope.__global__.__graphics__;
+        ctx.clearRect(0, 0, width, height);
+    "
+}
+
+to.native gfx.rect.fill [ x y w h ] {
+    "
+        const { ctx } = this.scope.__global__.__graphics__;
+        ctx.rect({{X}}, {{Y}}, {{W}}, {{H}});
+        ctx.fill();
+    "
+}
+
+to gfx.test [] {
+
+    gfx.init
+    gfx.setSize 640 480
+
+    let x1 0
+    let y1 0
+    let x2 gfx.width
+    let y2 gfx.height
+
+    repeat ((x2 / 10) + 1) [
+        gfx.stroke.color color.random
+        gfx.line x1 y1 x2 y2
+        let x1 (x1 + 10)
+        let x2 (x2 - 10)
+    ]
+
+    let x1 0
+    let y1 0
+    let x2 gfx.width
+    let y2 gfx.height
+
+    repeat ((y2 / 10) + 1) [
+        gfx.stroke.color color.random
+        gfx.line x1 y1 x2 y2
+        let y1 (y1 + 10)
+        let y2 (y2 - 10)
+    ]
+
+}
+
+to.native turtle.init [] {
+    "
+        this.scope.__global__.__turtle__ = {
+            heading: 0,
+            width: 1,
+            x: this.scope.__global__.__graphics__.width / 2,
+            y: this.scope.__global__.__graphics__.height / 2,
+            down: true,
+            color: 'black'
+        };
+    "
+}
+
+to.native turtle.color [ color ] {
+    "
+        this.scope.__global__.__turtle__.color = {{COLOR}};
+        return this.Token.box({{COLOR}});
+    "
+}
+
+to.native turtle.penUp [ ] {
+    "
+        this.scope.__global__.__turtle__.down = false;
+        return this.Token.box(0);
+    "
+}
+
+to.native turtle.penDown [ ] {
+    "
+        this.scope.__global__.__turtle__.down = true;
+        return this.Token.box(1);
+    "
+}
+
+to pu [ ] {
+    turtle.penUp
+}
+
+to pd [ ] {
+    turtle.penDown
+}
+
+to pc [ color ] {
+    turtle.color color
+}
+
+to.native turtle.right [ deg ] {
+    "
+        this.scope.__global__.__turtle__.heading += {{DEG}};
+        return this.Token.box(this.scope.__global__.__turtle__.heading);
+    "
+}
+
+to rt [ deg ] {
+    turtle.right deg
+}
+
+to.native turtle.left [ deg ] {
+    "
+        this.scope.__global__.__turtle__.heading -= {{DEG}};
+        return this.Token.box(this.scope.__global__.__turtle__.heading);
+    "
+}
+
+to lt [ deg ] {
+    turtle.left deg
+}
+
+to.native turtle.forward [ dist ] {
+    "
+        const { heading, width, x, y, color, down } = this.scope.__global__.__turtle__;
+        const { ctx } = this.scope.__global__.__graphics__;
+        const x2 = x + ({{DIST}} * Math.sin( heading * (Math.PI / 180) ));
+        const y2 = y - ({{DIST}} * Math.cos( heading * (Math.PI / 180) ));
+
+        if (down) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth= width;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+        this.scope.__global__.__turtle__.x = x2;
+        this.scope.__global__.__turtle__.y = y2;
+    "
+}
+
+to fd [ dist ] {
+    turtle.forward dist
+}
+
+to turtle.backward [ dist ] {
+    turtle.forward ( dist * -1 )
+}
+
+to bk [ dist ] {
+    turtle.backward dist
+}
+
+to turtle.circle [ s ] {
+    repeat 36 [
+        fd s
+        rt 10
+    ]
+}
+
+to turtle.square [ s ] {
+    repeat 4 [
+        fd s
+        rt 90
+    ]
+}
+
+to turtle.flag [ s ] {
+    fd s
+    turtle.square s
+    lt 180
+    fd s
+}
+
+to turtle.test [ ] {
+    gfx.init
+    gfx.setSize 640 480
+    turtle.init
+
+    pd
+    repeat 10 [
+        repeat 18 [
+            pc color.random
+            turtle.circle 5
+            rt 10
+        ]
+        turtle.flag 100
+        pu
+        fd 50
+        lt 36
+        pd
+    ]
+}
+
+turtle.test
