@@ -261,15 +261,19 @@ to turtle.test [ ] {
 
     pd
     repeat 10 [
-        repeat 18 [
+        repeat 28 [
             pc color.random
-            turtle.circle 5
-            rt 10
+            repeat 2 [
+                repeat 9 [
+                    fd 10 rt 4
+                ]
+                rt 145
+            ]
+            rt 11
         ]
-        turtle.flag 100
         pu
-        fd 50
-        lt 36
+        fd 75
+        lt 40
         pd
     ]
 }
