@@ -12,6 +12,25 @@ to stack.pop [ stack ] {
     ]
 }
 
+to queue.enqueue [ queue x ] {
+    queue + [ x ]
+}
+
+to queue.dequeue [ queue ] {
+    [
+        queue . 0
+        queue . [ 1 -1 ]
+    ]
+}
+
+to list.rotate.right [ list ] {
+    [ list . -1 ] + (list . [0 -2])
+}
+
+to list.rotate.left [ list ] {
+    (list . [1 -1]) + [ list . 0 ]
+}
+
 to list.map2 [ list mapFn ] {
     idx = 0
     mapList = [ ]

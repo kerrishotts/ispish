@@ -138,6 +138,13 @@ export default {
         precedence: 0,
         impl: remImpl,
     },
+    '#': {
+        native: true,
+        lhs: 0,
+        rhs: 1,
+        precedence: 0,
+        impl: remImpl,
+    },
     REQUIRE: {
         native: true,
         lhs: 0,

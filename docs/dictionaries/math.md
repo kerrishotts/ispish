@@ -16,7 +16,7 @@ symbol | constant
 -------|---------
 &pi;   | `math.pi`
 
-## Mathematical Definitions
+## Geometry Definitions
 
 ### math.cos
 
@@ -43,6 +43,15 @@ math.sin (math.from.deg.to.rad 180)
 → 1.2246467991473532e-16
 ```
 
+## Mathematical Conversion
+
+### math.from.deg.to.rad _x_
+### math.from.rad.to.deg _x_
+### math.to.deg.from.rad _x_
+### math.to.rad.from.deg _x_
+
+## Randomness
+
 ### math.random
 
 Returns a random number between zero and one.
@@ -52,3 +61,18 @@ require math
 math.random
 → 0.1593227320383903
 ```
+
+### math.random.integer.between _low_ _high_
+
+### math.random.between _low_ _high_
+
+
+## Rounding
+
+### math.floor _x_
+
+### math.ceil _x_
+
+### math.round _x_
+
+### math.integer _x_

@@ -35,7 +35,7 @@ to.native gfx._init [] {
     "
 }
 
-to.native gfx.setSize [ w h ] {
+to.native gfx.set.size [ w h ] {
     "
         if (typeof window !== 'undefined') {
             const { ctx } = this.scope.__global__.__graphics__;
@@ -62,7 +62,7 @@ to.native gfx.setSize [ w h ] {
     "
 }
 
-to.native gfx.exportToPNG [ fn ] {
+to.native gfx.export.to.png [ fn ] {
     "
 
         if (typeof window !== 'undefined') {
@@ -87,7 +87,7 @@ to.native gfx.exportToPNG [ fn ] {
 
 to gfx.init [] {
     gfx._init
-    gfx.setSize 320 240
+    gfx.set.size 320 240
 }
 
 to.native gfx.stroke.color [ color ] {
@@ -154,7 +154,7 @@ to.native gfx.rect.fill [ x y w h ] {
 to gfx.test [] {
 
     gfx.init
-    gfx.setSize 640 480
+    gfx.set.size 640 480
 
     x1 = 0
     y1 = 0

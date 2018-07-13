@@ -1,55 +1,94 @@
 # Getting Started
 
+- [Start in Interactive mode](#start-in-interactive-mode)
 - [Hello, World!](#hello-world)
 - [Words](#words)
 - [Variables](#variables)
 - [Expressions](#expressions)
+
+## Start in Interactive mode
+
+The examples within this section work while in interactive mode. You can start **ispish** interactively like so:
+
+```bash
+ispish --interactive
+```
+
+Once started, you'll see a simple prompt:
+
+```text
+Ready.
+```
+
+Return values from any expressions are indicated as such:
+
+```text
+→ "Hello, World"
+```
 
 ## Hello, World!
 
 Let's write our first program that writes "Hello, World" to the console:
 
 ```text
-PRINT "Hello, World"
-> Hello, World
+print "Hello, World"
 ```
 
-As you can see, `print` can be used to put content onto the console. We can print a string by enclosing words in double quotes. What if we wanted to print a number instead?
+You should see the following output:
 
 ```text
-PRINT 42
-> 42
+Hello, World
+→ "Hello, World"
 ```
+
+As you can see, `print` can be used to put content onto the console, although it looks like we've printed "Hello, World" twice, right? The _first_ "Hello, World" is what was printed but the second is what was returned.
+
+> **TIP**
+>
+> Just about everything in **ispish** returns a value, including `print`. When in the interactive
+> mode, you'll see this output prefixed with a `→ `, indicating that a value was returned. When not
+> in interactive mode, you wouldn't see this printed to the console.
+
+We can print a string by enclosing words in double quotes. What if we wanted to print a number instead?
+
+```text
+print 42
+42
+→ "42"
+```
+
+Notice that the return result here has quotes around it: this indicates that the return result is a string, even though we printed a number.
 
 `print` can also print more than just strings or numbers. It can also print lists. When printing lists, the result is joined together with no spaces, so we can use this to join multiple strings together, like so:
 
 ```text
-PRINT ["Hello, " "World"]
-> Hello, World
+print [ "hello" " " "world" ]
+hello world
+→ "hello world"
 ```
 
 ## Words
 
 In **ispish**, you can tell the computer what to do by using **words**. You've already used a **word** -- `print` itself is a word.
 
-**ispish** expects that the words you use will be defined. Upon initialization, **ispish** knows a few key words (known as the "standard wordset"), but it's also possible to augment **ispish** with more words.
+**ispish** expects that the words you use will be defined. Upon initialization, **ispish** knows a few key words (known as the "standard dictionary"), but it's also possible to augment **ispish** with more words.
 
 If you try to use a word that **ispish** doesn't know about, you'll get an error.
 
 ```text
-PRINTIFY 10
-> Can't find PRINTIFY (at 1:1)
+printify 10
+Error: Can't find PRINTIFY (at 1:1)
 ```
 
 > **NOTE**: **ispish** will usually try to be helpful and indicate the line and character position of the error. If **ispish** can't indicate the location of the error, the `(at x:y)` portion of the error will be missing.
 
-Unlike natural languages, a **word** doesn't have to be a series of letters. In **ispish** anything that's not a number, string, list, tuple, block, or expression is considered a word. This means that `+`, `.`, and `A` are all considered to be words.
+Unlike natural languages, a **word** doesn't have to be a series of letters. In **ispish** anything that's not a number, string, list, parenthetical, block, or expression is considered a word. This means that `+`, `.`, and `A` are all considered to be words.
 
 New words can be defined using `TO`. For example:
 
 ```text
-TO SAYHELLO [] {
-    PRINT "Hello"
+to say.hello [] {
+    print "Hello"
 }
 ```
 
@@ -58,68 +97,107 @@ TO SAYHELLO [] {
 Once a word has been defined, it can be invoked like any other word:
 
 ```text
-SAYHELLO
-> Hello
+say.hello
+Hello
+→ "Hello"
 ```
 
 Words can take arguments too:
 
 ```text
-TO SAYHELLO [ NAME ] {
-    PRINT [ "Hello, " NAME ]
+to say.hello.to [ name ] {
+    PRINT [ "Hello, " name ]
 }
-SAYHELLO "John"
-> Hello, John
+say.hello.to "John"
+Hello, John
+→ "Hello, John"
 ```
 
-What's `NAME`, you ask? Well, although `NAME` itself is a **word**, when saying "hello", we want to use the value passed in as an argument to `SAYHELLO`. When `SAYHELLO` was invoked, a new **variable** named `NAME` was created and given the value of `"John"`, so that when `PRINT` evaluates `NAME`, `"John"` is the value returned.
+What's `name`, you ask? Well, although `name` itself is a **word**, when saying "hello", we want to use the value passed in as an argument to `say.hello.to`. When `say.hello.to` was invoked, a new **variable** named `name` was created and given the value of `"John"`, so that when `print` evaluates `name`, `"John"` is the value returned.
 
-When used with `TO`, the list `[ NAME ]` is indicating that `SAYHELLO` expects one argument, and it'll be given the name `NAME`. We can later refer to that value in `SAYHELLO` using `NAME`.
+When used with `to`, the list `[ name ]` is indicating that `say.hello.to` expects one argument, and it'll be given the name `name`. We can later refer to that value in `say.hello.to` using `name`.
 
 Any number of arguments can be specified:
 
 ```text
-TO SAYHELLO [ FIRST LAST ] {
-    PRINT [ "Hello, " FIRST " " LAST ]
+to say.goodbye.to [ first last ] {
+    PRINT [ "Goodbye, " first " " last ]
 }
-SAYHELLO "John" "Smith"
-> Hello, John Smith
+
+say.goodbye.to "John" "Smith"
+Goodbye, John Smith
+→ "Goodbye, John Smith"
 ```
 
-> **NOTE**: Once a word is defined, it _cannot_ be redefined. If you do so, you'll get the error `Can't redefine word <WORD>. (at x:y)`.
+> **NOTE**: Once a word is defined, it _cannot_ be redefined with a different number of parameters. If you do so, you'll get the error `Can't redefine word <WORD>. (at x:y)`.
+
+It's also possible to retrieve and pass more arguments than are required:
+
+```text
+to print.all [ ] {
+    print ...
+}
+
+(print.all "hello, " "world!")
+hello, world!
+→ "hello, world!"
+```
+
+The special word `...` represents the list of any arguments not named. **ispish** will automatically collect any additional items inside a parenthetical and assign them as additional arguments. This does mean that you can't do the following:
+
+```text
+print.all "hello, " "world!"
+
+→ "world!"
+```
+
+Note that `print` didn't print _anything_, and `"world!"` was what was returned. This is because words have a _default_ number of parameters -- these include only named parameters. Additional parameters are allowed, but they are considered additional, and only included when inside parentheticals.
 
 ## Variables
 
-You've already seen how to use variables inside of word definitions, but you can define variables whenever you need them using the word `LET`.
+You've already seen how to use variables inside of word definitions, but you can define variables whenever you need them using the word `LET` or the assignment operator (`=`).
 
 ```text
-LET NAME "John"
-PRINT [ "Hello, " NAME ]
-> Hello, John
+{
+    let name "John"
+    print [ "Hello, " name ]
+}
+Hello, John
+→ "Hello, John"
 ```
 
-Once a variable is defined using `LET` you can refer to it using the `<NAME>` form. Unlike words, you can use `LET` as many times as you want to redefine a variable.
+> **IMPORTANT:**
+> .
+> We're wrapping both statements inside a block so that the `print` word has access to the `name` variable. **ispish**'s interactive mode implicitly wraps each entry into a block, which creates a new scope and isolates variables from separate entries. To keep the two together, you have to be explicit about creating a block.
+
+Once a variable is defined using `LET` or `=`, you can refer to it using the `<NAME>` form. Unlike words, you can use `LET` or `=` as many times as you want to redefine a variable.
 
 ```text
-LET NAME "John"
-LET NAME "Martha"
-PRINT NAME
-> Martha
+{
+    let name "John"
+    let name "Martha"
+    print name
+}
+Martha
+→ "Martha"
 ```
 
 An important thing to remember about variables is that they are **scoped**. `LET` will create variables in the current scope, which also happens to be the current **block**.
 
-A **block** is a series of words inside `{...}`. Thus far you've not had to use these braces, but all programs are implicitly embedded within a block. To see how blocks affect variables, however, let's try this:
+A **block** is a series of words inside `{...}`. All programs are implicitly embedded within a block. To see how blocks affect variables, however, let's try this:
 
 ```text
-LET NAME "John"
 {
-    LET NAME "Martha"
-    PRINT NAME
+    name = "John"
+    {
+        name = "Martha"
+        print name
+    }
+    print name
 }
-PRINT NAME
-> Martha
-> John
+Martha
+John
+→ "John"
 ```
 
 As you can see, the moment we entered into a new block, we were free to define a new name ("Martha") without losing the name in the outer block.
@@ -127,60 +205,40 @@ As you can see, the moment we entered into a new block, we were free to define a
 Variables outside of the scope can be accessed—they just can't be changed, however. For example:
 
 ```text
-LET NAME "John"
 {
-    PRINT NAME
+    name = "John"
+    {
+        print name
+    }
 }
-> John
+John
+→ "John"
 ```
 
-Variables defined in word definitions are subject to the same restriction–variables outside of the word defintion can be accessed, but new words are restricted to the inside of the word definition.
+Variables defined in word definitions are subject to the same restriction–variables outside of the word definition can be accessed, but new variables are restricted to the inside of the word definition.
 
 ## Expressions
 
 Technically everything in **ispish** is an expression—that is, everything returns a value. Some words, however, are used in a manner that's more like mathematical expressions like `2 + 2`, rather than `ADD 2 2`.
 
-Mathematical expressions follow the same rules as typical mathematics as defined in the following table:
-
-Operator | Precedence | Meaning
-:-------:|:----------:|:---------
-`*`      | High       | Multiply
-`/`      | High       | Divide
-`+`      | Medium     | Add
-`-`      | Medium     | Subtract
-
-Comparison operators are also present:
-
-Operator | Precedence | Meaning
-:-------:|:----------:|:---------
-`<`      | Low        | Less Than
-`>`      | Low        | Greater Than
-`<=`     | Low        | Less Than or Equal
-`>=`     | Low        | Greater Than or Equal
-`==`     | Low        | Equal
-`!=`     | Low        | Not Equal
-
-**ispish** requires that these words be used in **infix** notation—which is the normal mathematical form. For example:
+Mathematical expressions follow the same rules as typical mathematics ([for more, see the "operator" type](../types/op.md)). This means you can write mathematical expressions naturally, like this:
 
 ```text
-PRINT 2 + 2
-> 4
-PRINT 2 + 4 * 5
-> 22
+print 2 + 2
+4
+→ "4"
+
+print 2 + 4 * 5
+22
+→ "22"
 ```
 
 If you need to specify precedence, parentheses are allowed:
 
 ```text
-PRINT (2 + 4) * 5
-> 30
+print (2 + 4) * 5
+30
+→ "30"
+
 ```
 
-Conditional operators work the same way, but will return `1` if the condition is truthful and `0` if the condition is false. For example:
-
-```text
-PRINT 1 < 2
-> 1
-PRINT 1 == 2
-> 0
-```

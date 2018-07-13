@@ -180,7 +180,7 @@ to turtle.flag [ s ] {
 
 to turtle.test [ ] {
     gfx.init
-    gfx.setSize 640 480
+    gfx.set.size 640 480
     gfx.clear
     turtle.init
 

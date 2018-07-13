@@ -6,7 +6,7 @@ export default ({
     const times = Token.guard(evaluate(Token.guard(token.leftChild), scope), {
         expected: KINDS.NUMBER,
     }).value;
-    const body = Token.guard(token.rightChild, { expected: KINDS.LIST });
+    const body = Token.guard(token.rightChild, { expected: [KINDS.LIST, KINDS.BLOCK] });
     scope.__exitSignal__ = false;
     let result;
     for (let i = 0; i < times; i += 1) {
