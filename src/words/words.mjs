@@ -1,4 +1,3 @@
-
 import letImpl from './impl/let.mjs';
 import exitImpl from './impl/exit.mjs';
 import exitWithImpl from './impl/exitWith.mjs';
@@ -15,14 +14,23 @@ import sizeImpl from './impl/size.mjs';
 import printImpl from './impl/print.mjs';
 import printCodeImpl from './impl/printCode.mjs';
 import remImpl from './impl/rem.mjs';
+import requireImpl from './impl/require.mjs';
 
 export default {
     LET: {
         native: true,
         lhs: 0,
         rhs: 2,
-        precedence: 0,
-        impl: letImpl
+        precedence: -1,
+        impl: letImpl,
+    }, // LET var expr
+    '=': {
+        op: false,
+        native: true,
+        lhs: 1,
+        rhs: 1,
+        precedence: -1,
+        impl: letImpl,
     }, // LET var expr
     EXIT: {
         native: true,
@@ -45,7 +53,7 @@ export default {
         precedence: 0,
         impl: toImpl,
     }, // TO proc [ parms ] {block}
-    "TO.NATIVE": {
+    'TO.NATIVE': {
         native: true,
         lhs: 0,
         rhs: 3,
@@ -57,14 +65,14 @@ export default {
         lhs: 0,
         rhs: 1,
         precedence: 0,
-        impl: whenImpl
+        impl: whenImpl,
     },
     IF: {
         native: true,
         lhs: 0,
         rhs: 2,
         precedence: 1,
-        impl: ifImpl
+        impl: ifImpl,
     }, // IF condition THEN {block}
     ELSE: {
         native: true,
@@ -93,41 +101,48 @@ export default {
         lhs: 0,
         rhs: 1,
         precedence: 0,
-        impl: sumImpl
+        impl: sumImpl,
     }, // SUM [list]
     '.': {
         native: true,
         lhs: 1,
         rhs: 1,
         precedence: 20,
-        impl: dotImpl
+        impl: dotImpl,
     },
     SIZE: {
         native: true,
         lhs: 0,
         rhs: 1,
         precedence: 0,
-        impl: sizeImpl
+        impl: sizeImpl,
     },
     PRINT: {
         native: true,
         lhs: 0,
         rhs: 1,
         precedence: 0,
-        impl: printImpl
+        impl: printImpl,
     },
     PRINTCODE: {
         native: true,
         lhs: 0,
         rhs: 1,
         precedence: 0,
-        impl: printCodeImpl
+        impl: printCodeImpl,
     },
     REM: {
         native: true,
         lhs: 0,
         rhs: 1,
         precedence: 0,
-        impl: remImpl
+        impl: remImpl,
+    },
+    REQUIRE: {
+        native: true,
+        lhs: 0,
+        rhs: 1,
+        precedence: 0,
+        impl: requireImpl,
     },
 };

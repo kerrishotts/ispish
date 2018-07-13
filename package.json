@@ -29,7 +29,8 @@
     },
     "homepage": "https://github.com/kerrishotts/ispish#readme",
     "dependencies": {
-        "get-stdin": "^6.0.0"
+        "get-stdin": "^6.0.0",
+        "pureimage": "^0.1.6"
     },
     "devDependencies": {
         "@types/chai": "^4.1.3",

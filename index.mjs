@@ -12,7 +12,9 @@ export { default as parse } from './src/parse.mjs';
 export { default as evaluate } from './src/evaluate.mjs';
 export { default as standardWords } from './src/standardWords.mjs';
 
+
 standardWords(wordRegistry);
+
 
 export function run(code, scope = {}) {
     let tokens;
@@ -40,7 +42,7 @@ ${err.stack}`);
                 line: 1,
                 pos: 1,
             }),
-            scope
+            scope,
         );
         return r;
     } catch (err) {

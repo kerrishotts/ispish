@@ -2,11 +2,16 @@
 import { reset, run, evaluate, Token, KINDS } from './index.mjs';
 import createScope from './src/createScope.mjs';
 
+import pureImage from 'pureimage';
+
 import fs from 'fs';
 import getStdin from 'get-stdin';
 import repl from 'repl';
 
-const scope = {};
+const scope = {
+    __canvas__: pureImage,
+    __fs__: fs,
+};
 
 const [, , ...args] = process.argv;
 
@@ -32,12 +37,12 @@ function exec(code) {
     }
 }
 
-files.forEach((file) => {
+files.forEach(file => {
     const code = fs.readFileSync(file, { encoding: 'utf8' });
     exec(code);
 });
 
-getStdin().then((str) => {
+getStdin().then(str => {
     if (str.trim() !== '') {
         exec(str);
     }

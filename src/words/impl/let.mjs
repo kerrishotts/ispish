@@ -1,9 +1,6 @@
 import { Token, KINDS } from '../../Token.mjs';
 
-export default ({
-    evaluate, token, scope, globalScope,
-} = {}) => {
-
+export default ({ evaluate, token, scope, globalScope } = {}) => {
     const varExpr = Token.guard(token.leftChild, { expected: [KINDS.WORD, KINDS.LIST] });
     const expr = Token.guard(token.rightChild);
     const r = expr.isBlock ? expr : evaluate(expr, scope);
@@ -11,6 +8,7 @@ export default ({
         if (r.isList) {
             const items = r.value;
             varExpr.value.forEach((varName, idx) => {
+                Token.guard(varName, { expected: KINDS.WORD });
                 scope[varName.word] = items[idx];
             });
             // TODO: support ...REST?

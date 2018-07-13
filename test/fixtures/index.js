@@ -7,4 +7,5 @@ module.exports = [
     'fib.isp',
     'fib-when.isp',
     'map.isp',
+    'require.isp',
 ];

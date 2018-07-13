@@ -17,6 +17,7 @@
     <div id="log">
        <div>Output:</div>
     </div>
+
     <script defer type="module">
         if (localStorage.getItem("code")) {
             document.getElementById("code").value = localStorage.getItem("code");
@@ -27,18 +28,31 @@
             el.textContent = args.join(" ");
             logEl.appendChild(el);
         }
-
+/*
+        // the standard library should be able to find this on its own
+        // ... hopefully
         const graphics = document.getElementById("graphics");
         const ctx = graphics.getContext("2d");
 
         const scope = {
             __graphics__: {
+                ctor: function() {
+                    return {
+                        canvas: document.getElementById("graphics"),
+                        ctx: ctx,
+                        w: 320,
+                        h: 240
+                    };
+                },
                 ctx,
                 el : graphics,
                 w : graphics.width,
                 h : graphics.height
             }
         };
+*/
+
+        const scope = { };
 
         console.log = log;
 

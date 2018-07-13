@@ -1,6 +1,8 @@
 # **ispish**
 A simple lisp/logo-like language. Small enough to learn quickly, while still teaching valuable learning and programming skills.
 
+![Turtle example](docs/assets/turtle/test.png)
+
 ## Installing **ispish**
 
 To install **ispish**:

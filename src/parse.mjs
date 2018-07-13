@@ -1,5 +1,7 @@
 import { KINDS, Token } from './Token.mjs';
 import wordRegistry from './WordRegistry.mjs';
+import __require__ from './require.mjs';
+import tokenize from './tokenize.mjs';
 
 function getArityFor(token) {
     const { words: arities } = wordRegistry;
@@ -110,41 +112,57 @@ function parse(tokens) {
                 });
             }
 
-            let exprToken;
-
-            if (token.isWord && isOp) {
-                exprToken = new Token({
-                    kind: KINDS.EXPR,
-                    value: new Token({
-                        kind: KINDS.OP,
-                        value: token.value,
+            if (token.isWord && token.value === 'REQUIRE') {
+                const moduleName = rhsTokens[0].value;
+                const code = __require__(moduleName);
+                const tokens = parse(tokenize(code));
+                parseTokens = [
+                    ...parseTokens.slice(0, posOfHighestToken - arity.lhs),
+                    new Token({
+                        kind: KINDS.BLOCK,
+                        value: tokens,
                         line: token.line,
                         pos: token.pos,
-                        tokens: token.tokens,
                     }),
-                    line: token.line,
-                    pos: token.pos,
-                });
+                    ...parseTokens.slice(posOfHighestToken + arity.rhs + 1, parseTokens.length),
+                ];
             } else {
-                // op looks like a word but isn't
-                exprToken = new Token({
-                    kind: KINDS.EXPR,
-                    value: token,
-                    line: token.line,
-                    pos: token.pos,
-                });
-            }
-            exprToken.tokens = parse([...lhsTokens, ...rhsTokens]);
+                let exprToken;
 
-            parseTokens = [
-                ...parseTokens.slice(0, posOfHighestToken - arity.lhs),
-                exprToken,
-                ...parseTokens.slice(posOfHighestToken + arity.rhs + 1, parseTokens.length),
-            ];
+                if (token.isWord && isOp) {
+                    exprToken = new Token({
+                        kind: KINDS.EXPR,
+                        value: new Token({
+                            kind: KINDS.OP,
+                            value: token.value,
+                            line: token.line,
+                            pos: token.pos,
+                            tokens: token.tokens,
+                        }),
+                        line: token.line,
+                        pos: token.pos,
+                    });
+                } else {
+                    // op looks like a word but isn't
+                    exprToken = new Token({
+                        kind: KINDS.EXPR,
+                        value: token,
+                        line: token.line,
+                        pos: token.pos,
+                    });
+                }
+                exprToken.tokens = parse([...lhsTokens, ...rhsTokens]);
+
+                parseTokens = [
+                    ...parseTokens.slice(0, posOfHighestToken - arity.lhs),
+                    exprToken,
+                    ...parseTokens.slice(posOfHighestToken + arity.rhs + 1, parseTokens.length),
+                ];
+            }
         }
     }
     // unwrap unnecessary expressions (they complicate the ast unnecessarily)
-    return parseTokens.map((token) => {
+    return parseTokens.map(token => {
         if (token.isExpr) {
             if (token.tokens.length === 0) {
                 return token.value;

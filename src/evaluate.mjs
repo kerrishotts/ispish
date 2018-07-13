@@ -104,19 +104,29 @@ function evaluate(ast, scope = {}) {
         }
         return r;
     }
-    if (token.isOp) {
-        const lhs = Token.guard(evaluate(Token.guard(token.leftChild), scope));
-        const rhs = Token.guard(evaluate(Token.guard(token.rightChild), scope));
-        const r = arities[token.value].impl(lhs, rhs);
-        if (r instanceof Token) {
-            return r;
+
+    const tokenIsOp = token.isOp && (arities[token.value] && arities[token.value].op);
+    const tokenIsWord = token.isWord || (arities[token.value] && !arities[token.value].op);
+
+    //if (token.isOp) {
+    if (tokenIsOp) {
+        const arity = arities[token.value];
+        if (arity) {
+            const { impl } = arities[token.value];
+            const lhs = Token.guard(evaluate(Token.guard(token.leftChild), scope));
+            const rhs = Token.guard(evaluate(Token.guard(token.rightChild), scope));
+            const r = impl(lhs, rhs, scope);
+            if (r instanceof Token) {
+                return r;
+            }
+            return new Token({
+                kind: KINDS.NUMBER,
+                value: r,
+            });
         }
-        return new Token({
-            kind: KINDS.NUMBER,
-            value: r,
-        });
+        throw new Error(`Unexpected operator ${token.value}`);
     }
-    if (token.isWord) {
+    if (tokenIsWord) {
         // is there a native impl? use it first
         if (arities[token.value] !== undefined && arities[token.value].impl) {
             return arities[token.value].impl({
@@ -156,6 +166,7 @@ function evaluate(ast, scope = {}) {
             }
             newScope._ARGS = args;
             newScope._REST = rest;
+            newScope['...'] = rest;
             if (!func.native) {
                 return evaluate(func, newScope);
             }

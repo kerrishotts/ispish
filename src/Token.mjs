@@ -481,6 +481,8 @@ export class Token {
             throw new Error(`Operator type mismatch; got ${a.kind} and ${b.kind}`);
         }
         if (a.kind !== KINDS.LIST) {
+            Token.guard(a, { expected: KINDS.NUMBER });
+            Token.guard(b, { expected: KINDS.NUMBER });
             return new Token({
                 kind: a.kind,
                 value: a.value - b.value,

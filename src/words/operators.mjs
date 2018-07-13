@@ -7,12 +7,11 @@ export default {
         lhs: 1,
         rhs: 1,
         precedence: 13,
-        impl: (a, b) => (
-            (Token.guard(a, { expected: KINDS.NUMBER }).value === 1) &&
-            (Token.guard(b, { expected: KINDS.NUMBER }).value === 1)
+        impl: (a, b) =>
+            Token.guard(a, { expected: KINDS.NUMBER }).value === 1 &&
+            Token.guard(b, { expected: KINDS.NUMBER }).value === 1
                 ? 1
-                : 0
-        ),
+                : 0,
     },
     OR: {
         native: true,
@@ -20,12 +19,11 @@ export default {
         lhs: 1,
         rhs: 1,
         precedence: 13,
-        impl: (a, b) => (
-            (Token.guard(a, { expected: KINDS.NUMBER }).value === 1) ||
-            (Token.guard(b, { expected: KINDS.NUMBER }).value === 1)
+        impl: (a, b) =>
+            Token.guard(a, { expected: KINDS.NUMBER }).value === 1 ||
+            Token.guard(b, { expected: KINDS.NUMBER }).value === 1
                 ? 1
-                : 0
-        ),
+                : 0,
     },
     '+': {
         native: true,
