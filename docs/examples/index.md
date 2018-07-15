@@ -13,3 +13,7 @@
 ## Turtle
 
 * [Spiral](./turtle/spiral.md)
+* [Koch](./turtle/koch.md)
+* [Pattern](./turtle/pattern.md)
+* [Tree](./turtle/tree.md)
+* [Fern](./turtle/fern.md)
