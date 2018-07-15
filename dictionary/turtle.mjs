@@ -36,6 +36,8 @@ to.native turtle.moveto [ x y ] {
 
         turtle.x = newX;
         turtle.y = newY;
+
+        return this.Token.box([ newX, newY ]);
     "
 }
 
@@ -136,12 +138,12 @@ to lt [ deg ] {
 }
 
 to turtle.forward [ dist ] {
-    let x turtle.x
-    let y turtle.y
-    let heading turtle.heading
-    let r (math.from.deg.to.rad heading)
-    let x2 (x + (dist * (math.sin r)))
-    let y2 (y - (dist * (math.cos r)))
+    x = turtle.x
+    y = turtle.y
+    heading = turtle.heading
+    r = (math.from.deg.to.rad heading)
+    x2 = (x + (dist * (math.sin r)))
+    y2 = (y - (dist * (math.cos r)))
     turtle.moveto x2 y2
 }
 

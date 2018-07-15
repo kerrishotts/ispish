@@ -11,6 +11,7 @@ import repl from 'repl';
 const scope = {
     __canvas__: pureImage,
     __fs__: fs,
+    __print__: console.log,
 };
 
 const [, , ...args] = process.argv;

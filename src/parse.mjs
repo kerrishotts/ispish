@@ -53,11 +53,9 @@ function parse(tokens) {
         const token = parseTokens[posOfHighestToken];
         if (token.isTuple) {
             const parsedTokens = parse(token.value);
-            // parseTokens[posOfHighestToken] = parsedTokens[parsedTokens.length - 1];
             const newToken = new Token({
                 kind: KINDS.EXPR,
                 value: parsedTokens[0],
-                //tokens: parsedTokens.slice(1),
                 line: token.line,
                 pos: token.pos,
             });
@@ -95,7 +93,7 @@ function parse(tokens) {
             const lhsTokens = parseTokens.slice(posOfHighestToken - arity.lhs, posOfHighestToken);
             const rhsTokens = parseTokens.slice(
                 posOfHighestToken + 1,
-                posOfHighestToken + arity.rhs + 1
+                posOfHighestToken + arity.rhs + 1,
             );
 
             // special case -- we need to figure out the arity for functions
@@ -162,7 +160,7 @@ function parse(tokens) {
         }
     }
     // unwrap unnecessary expressions (they complicate the ast unnecessarily)
-    return parseTokens.map(token => {
+    return parseTokens.map((token) => {
         if (token.isExpr) {
             if (token.tokens.length === 0) {
                 return token.value;

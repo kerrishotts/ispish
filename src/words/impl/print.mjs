@@ -19,7 +19,11 @@ const tokenToString = token => {
 export default ({ evaluate, token, scope, globalScope } = {}) => {
     const expr = evaluate(Token.guard(token.leftChild), scope);
     const r = tokenToString(expr);
-    console.log(r);
+    if (globalScope.__print__) {
+        globalScope.__print__(r);
+    } else {
+        console.log(r);
+    }
     return new Token({
         kind: KINDS.STRING,
         value: r.toString(),

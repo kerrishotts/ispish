@@ -42,7 +42,11 @@ const print = ({
     const expr = Token.guard(token.leftChild);
     if (expr) {
         const r = tokenToString(expr);
-        console.log('→', r);
+        if (globalScope.__print__) {
+            globalScope.__print__('→', r);
+        } else {
+            console.log('→', r);
+        }
         return new Token({
             kind: KINDS.STRING,
             value: r.toString(),

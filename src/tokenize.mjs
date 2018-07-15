@@ -157,6 +157,12 @@ function tokenize(code, { line = 1, pos = 1 } = {}) {
                 startPos,
             };
         }
+        if (whitespace.test(ch)) {
+            // this keeps token positions correct while we're eating through
+            // only linefeeds or whitespace
+            startPos = pos;
+            startLine = line;
+        }
         str = !whitespace.test(ch) ? ch : '';
 
         return {

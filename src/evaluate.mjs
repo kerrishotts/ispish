@@ -54,7 +54,7 @@ function evaluate(ast, scope = {}) {
                 value: token.value.value,
                 tokens: token.tokens,
             }),
-            scope
+            scope,
         );
     }
 
@@ -69,7 +69,7 @@ function evaluate(ast, scope = {}) {
     }
     if (token.isTuple) {
         let r;
-        token.value.forEach(token => {
+        token.value.forEach((token) => {
             const result = evaluate(token, scope);
             if (result !== undefined) {
                 r = result;
@@ -108,7 +108,6 @@ function evaluate(ast, scope = {}) {
     const tokenIsOp = token.isOp && (arities[token.value] && arities[token.value].op);
     const tokenIsWord = token.isWord || (arities[token.value] && !arities[token.value].op);
 
-    //if (token.isOp) {
     if (tokenIsOp) {
         const arity = arities[token.value];
         if (arity) {
@@ -167,6 +166,7 @@ function evaluate(ast, scope = {}) {
             newScope._ARGS = args;
             newScope._REST = rest;
             newScope['...'] = rest;
+            newScope.__name__ = token;
             if (!func.native) {
                 return evaluate(func, newScope);
             }
@@ -181,7 +181,7 @@ function evaluate(ast, scope = {}) {
                     while (acc.indexOf(repl) > -1) {
                         acc = acc.replace(
                             repl,
-                            `this.scope.${k}${v instanceof Token ? '.unboxed' : ''}`
+                            `this.scope.${k}${v instanceof Token ? '.unboxed' : ''}`,
                         );
                     }
                     return acc;
@@ -203,7 +203,16 @@ function evaluate(ast, scope = {}) {
             }
             return Token.box(r);
         } catch (err) {
-            throw new Error(`${err.message} ${token.where}`);
+            // see if we can look up the current word we're in
+            let wordName;
+            try {
+                const token = lookup('__name__', scope);
+                wordName = ` in ${token.value}`;
+            } catch (err) {
+                // do nothing
+                wordName = '';
+            }
+            throw new Error(`${err.message} ${token.where}${wordName}\n`);
         }
     }
     return undefined;

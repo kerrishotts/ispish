@@ -4,6 +4,7 @@ export default ({ evaluate, token, scope, globalScope } = {}) => {
     const varExpr = Token.guard(token.leftChild, { expected: [KINDS.WORD, KINDS.LIST] });
     const expr = Token.guard(token.rightChild);
     const r = expr.isBlock ? expr : evaluate(expr, scope);
+
     if (varExpr.isList) {
         if (r.isList) {
             const items = r.value;
